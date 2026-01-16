@@ -1,73 +1,60 @@
-# React + TypeScript + Vite
+# React Study
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React와 Vite를 사용해서 기본 구조와 컴포넌트 렌더링 연습을 진행한 프로젝트입니다.
 
-Currently, two official plugins are available:
+## 프로젝트 개요
+- React 18 + Vite 기반 프로젝트
+- TypeScript 사용
+- 페이지 구조: Home, Login, Signup
+- 공통 UI 컴포넌트: Header, InputField, Button
+- 반응형 레이아웃 적용
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 1.16 작업 내용
+1. **Header 컴포넌트**
+   - NavLink를 사용해 현재 페이지 강조
+   - 반응형 글씨 크기 및 hover/active 스타일 적용
+   - sticky 속성으로 상단 고정
 
-## React Compiler
+2. **UI 컴포넌트 연습**
+   - InputField, Button 컴포넌트 생성
+   - props를 활용해 재사용 가능하게 구성
+   - LoginForm에서 InputField와 Button 렌더링
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+3. **페이지 구성**
+   - Home, Login, Signup 페이지 생성
+   - LoginForm 컴포넌트에서 InputField/버튼 활용
+   - App.tsx에서 BrowserRouter와 Routes 설정
 
-## Expanding the ESLint configuration
+## 추후 작업 내용
+1. **폼 기능 구현 (Login/Signup)**
+   - InputField와 Button을 활용해서 실제 입력 값 상태 관리
+   - LoginForm.tsx에서 입력값을 상태(state)로 관리 → App에서 또는 Context/API로 전달
+   - 로그인 버튼 클릭 시 콘솔 출력이나, 나중에 백엔드 연동 테스트
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+2. **상태 관리 및 유효성 검증**
+   - 입력 값 검증 (ex: 이메일 형식, 비밀번호 길이)
+   - 입력 상태에 따른 버튼 활성화/비활성화
+   - 오류 메시지 표시
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+3. **공통 레이아웃 컴포넌트 강화**
+   - Header에 로그인 상태 표시(로그인 시 “환영합니다”, 로그아웃 버튼)
+   - Footer 컴포넌트 추가 가능
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+4. **페이지 스타일링/반응형 강화**
+   - Home, Login, Signup 각 페이지 레이아웃 구성
+   - Mobile/Tablet/PC 화면 대응
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+5. **라우팅/네비게이션 개선**
+   - 로그인 상태에 따른 접근 제한 (ex로그인 전에는 Signup/Login만 접근 가능)
+   - 로그인 후에는 Home 접근 가능
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+6. **API 연동 준비**
+   - 나중에 백엔드 서버와 통신할 수 있도록 axios/Fetch 세팅
+   - 로그인/회원가입 POST 요청 테스트
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 설치 및 실행
+```bash
+git clone https://github.com/psh1124/React-Study.git
+cd React-Study
+npm install
+npm run dev
