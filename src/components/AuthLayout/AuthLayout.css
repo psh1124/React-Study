@@ -1,0 +1,20 @@
+.auth-layout {
+  height: calc(100vh - var(--header-height));
+  display: flex;
+  justify-content: center;
+  padding: clamp(1.5rem, 5vh, 3rem) 1rem;
+}
+
+.auth-layout--center {
+  align-items: center;
+}
+
+.auth-layout--top {
+  align-items: flex-start;
+}
+
+.auth-layout--login {
+  height: 80vh;
+  padding-top: clamp(1rem, 4vh, 2rem);
+  padding-bottom: clamp(1rem, 4vh, 2rem);
+}
