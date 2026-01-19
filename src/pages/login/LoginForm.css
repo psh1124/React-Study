@@ -1,0 +1,42 @@
+.login-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 2rem);
+}
+
+.login-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 1.5vh, 0.75rem);
+}
+
+.login-form label {
+  font-size: clamp(0.95rem, 2.2vw, 1.1rem);
+  font-weight: 600;
+}
+
+.login-form .error {
+  color: #ff4d4d;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  margin: 0;
+}
+
+.login-form button {
+  margin-top: clamp(1.5rem, 2.5vh, 2rem);
+}
+
+.signup-link {
+  margin-top: clamp(1rem, 2.5vh, 1.5rem);
+  font-size: clamp(0.9rem, 2vw, 1rem);
+}
+
+.signup-link a,
+.signup-link a:visited {
+  color: purple;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
