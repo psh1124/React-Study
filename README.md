@@ -106,10 +106,10 @@ npm run dev
 
 ## 📌 앞으로 할 작업
 
-1. API 연동 (로그인/회원가입)
-2. 로그인 상태 유지 및 인증 흐름 구현
-3. 서버 상태 관리 (React Query / Redux 등)
-4. 모바일/태블릿 레이아웃 최적화
+이 프로젝트의 TODO 및 향후 작업 계획은 GitHub Projects에서 관리하고 있습니다.  
+아래 링크에서 현재 진행 중인 이슈와 계획을 확인할 수 있습니다.
+
+- GitHub Projects: https://github.com/psh1124/React-Study/projects
 
 ---
 
