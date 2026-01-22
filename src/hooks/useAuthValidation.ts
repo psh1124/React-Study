@@ -32,3 +32,21 @@ export const getPasswordConfirmError = (
   if (password !== passwordConfirm) return "비밀번호가 일치하지 않습니다.";
   return null;
 };
+
+export const getNicknameError = (
+  nickname: string,
+  touched: boolean
+): string | null => {
+  if (!touched) return null;
+  if (!nickname) return "닉네임을 입력해주세요.";
+  return null;
+};
+
+export const getTermsError = (
+  agreed: boolean,
+  touched: boolean
+): string | null => {
+  if (!touched) return null;
+  if (!agreed) return "약관에 동의해주세요.";
+  return null;
+};
