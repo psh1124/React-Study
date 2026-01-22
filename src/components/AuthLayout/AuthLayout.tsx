@@ -9,7 +9,7 @@ interface AuthLayoutProps {
 
 function AuthLayout({
   children,
-  align = "center",
+  align = "top",
   className = "",
   variant = "default",
 }: AuthLayoutProps) {
