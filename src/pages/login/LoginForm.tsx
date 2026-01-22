@@ -6,6 +6,7 @@ import { getEmailError, getPasswordError } from "../../hooks/useAuthValidation";
 import "./LoginForm.css";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoIosWarning } from "react-icons/io";
+import { useAuth } from "../../context/useAuth";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -19,8 +20,39 @@ function LoginForm() {
   const passwordError = getPasswordError(password, passwordTouched);
   const isFormValid = !emailError && !passwordError;
 
+  const emailInputProps = {
+    id: "email",
+    name: "email",
+    type: "email",
+    autoComplete: "email",
+    placeholder: "이메일을 입력하세요",
+    value: email,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      setEmail(e.target.value),
+    onBlur: () => setEmailTouched(true),
+  };
+  const passwordInputProps = {
+    id: "password",
+    name: "password",
+    type: showPassword ? "text" : "password",
+    autoComplete: "current-password",
+    placeholder: "비밀번호를 입력하세요",
+    value: password,
+    onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+      setPassword(e.target.value),
+    onBlur: () => setPasswordTouched(true),
+  };
+
+  const { login } = useAuth();
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isFormValid) return;
+
+    login({
+      email
+    })
+
     console.log("email : ", email);
     console.log("password : ", password);
 
@@ -36,15 +68,7 @@ function LoginForm() {
         <div className="login-form__field">
           <label htmlFor="email">이메일</label>
           <InputField
-            id="email"
-            name="email"
-            className="email-input"
-            type="email"
-            autocomplete="email"
-            placeholder="이메일을 입력하세요"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            onBlur={() => setEmailTouched(true)}
+            className="email-input" {...emailInputProps}
           />
           {emailError && (
             <p className="error">
@@ -55,29 +79,15 @@ function LoginForm() {
 
         <div className="login-form__field">
           <label htmlFor="password">비밀번호</label>
-
           <div className="password-wrapper">
             <InputField
-              id="password"
-              name="password"
-              className="password-input"
-              type={showPassword ? "text" : "password"}
-              placeholder="비밀번호를 입력하세요"
-              value={password}
-              autocomplete="current-password"
-              onChange={(e) => setPassword(e.target.value)}
-              onBlur={() => setPasswordTouched(true)}
+              className="password-input" {...passwordInputProps}
             />
-
             <button
               type="button"
               className="password-toggle"
               aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-              onMouseDown={() => setShowPassword(true)}
-              onMouseUp={() => setShowPassword(false)}
-              onMouseLeave={() => setShowPassword(false)}
-              onTouchStart={() => setShowPassword(true)}
-              onTouchEnd={() => setShowPassword(false)}
+              onClick={() => setShowPassword((prev) => !prev)}
             >
               {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
