@@ -5,6 +5,8 @@ import {
   getEmailError,
   getPasswordError,
   getPasswordConfirmError,
+  getNicknameError,
+  getTermsError,
 } from "../../hooks/useAuthValidation";
 import "./SignupForm.css";
 import { IoIosWarning } from "react-icons/io";
@@ -22,6 +24,22 @@ function SignupForm() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
+
+  const [nickname, setNickname] = useState("");
+  const [nicknameTouched, setNicknameTouched] = useState(false);
+
+  const [agreeTerms, setAgreeTerms] = useState(false);
+  const [termsTouched, setTermsTouched] = useState(false);
+
+  const signupData = {
+    nickname,
+    email,
+    password,
+    passwordConfirm,
+    agreeTerms,
+  };
+
+
   const navigate = useNavigate();
 
   const emailError = getEmailError(email, emailTouched);
@@ -32,15 +50,24 @@ function SignupForm() {
     passwordConfirmTouched,
   );
 
-  const isFormValid = !emailError && !passwordError && !passwordConfirmError;
+  const nicknameError = getNicknameError(nickname, nicknameTouched);
+  const termsError = getTermsError(agreeTerms, termsTouched);
+
+  const isFormValid =
+    !emailError &&
+    !passwordError &&
+    !passwordConfirmError &&
+    !nicknameError &&
+    !termsError;
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("signup data:", { email, password });
+    console.log("signup data:", signupData);
 
     //추후 백엔드 로직 추가
 
-    alert(`${email}님 환영합니다!`);
+    alert(`${nickname}님 정상적으로 회원가입 처리 되었습니다.`);
     navigate("../login");
   };
 
@@ -48,13 +75,33 @@ function SignupForm() {
     <form onSubmit={handleSubmit} className="signup-form">
       <div className="signup-form__fields">
         <div className="signup-form__field">
+          <label htmlFor="nickname">닉네임</label>
+          <InputField
+            id="nickname"
+            name="nickname"
+            className="nickname-input"
+            type="text"
+            autoComplete="username"
+            placeholder="닉네임을 입력하세요"
+            value={nickname}
+            onChange={(e) => setNickname(e.target.value)}
+            onBlur={() => setNicknameTouched(true)}
+          />
+          {nicknameError && (
+            <p className="error">
+              <IoIosWarning /> {nicknameError}
+            </p>
+          )}
+        </div>
+
+        <div className="signup-form__field">
           <label htmlFor="email">이메일</label>
           <InputField
             id="email"
             name="email"
             className="email-input"
             type="email"
-            autocomplete="email"
+            autoComplete="email"
             placeholder="이메일을 입력하세요"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +124,7 @@ function SignupForm() {
               type={showPassword ? "text" : "password"}
               placeholder="비밀번호를 입력하세요"
               value={password}
-              autocomplete="current-password"
+              autoComplete="current-password"
               onChange={(e) => setPassword(e.target.value)}
               onBlur={() => setPasswordTouched(true)}
             />
@@ -99,7 +146,6 @@ function SignupForm() {
 
         <div className="signup-form__field">
           <label htmlFor="passwordConfirm">비밀번호 확인</label>
-
           <div className="password-wrapper">
             <InputField
               id="passwordConfirm"
@@ -107,7 +153,7 @@ function SignupForm() {
               className="password-input"
               type={showPasswordConfirm ? "text" : "password"}
               placeholder="비밀번호를 다시 입력하세요"
-              autocomplete="current-password"
+              autoComplete="current-password"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
               onBlur={() => setPasswordConfirmTouched(true)}
@@ -133,6 +179,26 @@ function SignupForm() {
             </p>
           )}
         </div>
+      </div>
+
+      <div className="signup-form__field">
+        <label className="terms-checkbox">
+          <input
+            type="checkbox"
+            checked={agreeTerms}
+            onChange={(e) => {
+              setAgreeTerms(e.target.checked)
+              setTermsTouched(true)
+            }}
+          />
+          <span>이용약관 및 개인정보 처리방침에 동의합니다</span>
+        </label>
+
+        {termsError && (
+          <p className="error">
+            <IoIosWarning /> {termsError}
+          </p>
+        )}
       </div>
 
       <div className="signup-form__actions">
