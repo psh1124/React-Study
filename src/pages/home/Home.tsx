@@ -1,7 +1,10 @@
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
+import { useState } from "react";
 
 function Home() {
+  const [email] = useState("");
+  console.log({email})
   return (
     <Container>
       <h1>Home Page</h1>
