@@ -12,6 +12,7 @@ import "./SignupForm.css";
 import { IoIosWarning } from "react-icons/io";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { mockSignup } from "../../mocks/auth";
 
 function SignupForm() {
   const [email, setEmail] = useState("");
@@ -61,14 +62,22 @@ function SignupForm() {
     !termsError;
 
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("signup data:", signupData);
 
-    //추후 백엔드 로직 추가
+    if (!isFormValid) return;
 
-    alert(`${nickname}님 정상적으로 회원가입 처리 되었습니다.`);
-    navigate("../login");
+    try {
+    //추후 정확한 백엔드 연동
+      const user = await mockSignup(email, password, nickname);
+
+      alert(`${user.nickname}님 회원가입이 완료되었습니다.`);
+      console.log("signup data:", signupData);
+  
+      navigate("../login");
+    } catch (error) {
+      alert((error as Error).message);
+    }
   };
 
   return (
