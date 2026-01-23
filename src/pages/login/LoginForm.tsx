@@ -7,6 +7,7 @@ import "./LoginForm.css";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { IoIosWarning } from "react-icons/io";
 import { useAuth } from "../../context/useAuth";
+import { mockLogin } from "../../mocks/auth";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -45,21 +46,21 @@ function LoginForm() {
 
   const { login } = useAuth();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) return;
 
-    login({
-      email
-    })
-
-    console.log("email : ", email);
-    console.log("password : ", password);
-
-    //추후 백엔드 로직 추가
-
-    alert(`${email}님 반갑습니다!`)
-    navigate("/");
+    //추후 정확한 백엔드 연동
+    try {
+      const user = await mockLogin(email, password)
+      login(user);
+      alert(user.nickname + "님 반갑습니다!");
+      console.log("email : ", email);
+      console.log("password : ", password);
+      console.log("홈페이지 이동");
+      navigate("/");
+    } catch (error) {
+      alert(error);
+    }
   };
 
   return (
