@@ -1,8 +1,9 @@
 import { createContext } from "react";
 
 export interface User {
+  id: number;
   email: string;
-  nickname?: string; //닉네임은 signup.tsx로 나중에
+  nickname?: string;
 }
 
 export interface AuthContextType {
