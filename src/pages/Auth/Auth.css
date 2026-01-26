@@ -1,0 +1,77 @@
+/* src/pages/Auth/Auth.css */
+
+/* 페이지 공통 레이아웃 */
+.auth-page .container {
+  padding: 0;
+}
+
+.auth-title {
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+}
+
+/* 폼 공통 레이아웃 */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 2.5vh, 2rem);
+}
+
+.auth-form__fields {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.2rem, 2.5vw, 2rem);
+}
+
+.auth-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(0.5rem, 2vh, 0.6rem);
+}
+
+/* 비밀번호 필드 전용 스타일 */
+.password-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input {
+  padding-right: clamp(3rem, 6vw, 3.5rem);
+}
+
+.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: clamp(0.5rem, 1.5vw, 0.75rem);
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+  line-height: 1;
+}
+
+/* 에러 메시지 공통 */
+.auth-form .error {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: #ff4d4d;
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  margin: 0;
+}
+
+/* 하단 액션 및 링크 */
+.auth-form__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.auth-footer-link {
+  text-align: center;
+  font-size: clamp(0.9rem, 2vw, 1rem);
+  margin-top: 1rem;
+}
