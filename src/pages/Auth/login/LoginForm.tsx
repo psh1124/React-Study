@@ -5,6 +5,7 @@ import Button from "../../../components/Button/Button";
 import {
   getEmailError,
   getPasswordError,
+  validateLoginForm,
 } from "../../../hooks/useAuthValidation";
 import "../Auth.css";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
@@ -12,17 +13,18 @@ import { IoIosWarning } from "react-icons/io";
 import { useAuth } from "../../../context/useAuth";
 import { mockLogin } from "../../../mocks/auth";
 import { toast } from "react-toastify";
+import { usePasswordToggle } from "../../../hooks/usePasswordToggle";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const { isVisible, toggle, type } = usePasswordToggle();
 
   const emailError = getEmailError(email, emailTouched);
   const passwordError = getPasswordError(password, passwordTouched);
-  const isFormValid = !emailError && !passwordError;
+  const isFormValid = validateLoginForm(email, password);
 
   const emailInputProps = {
     id: "email",
@@ -38,7 +40,7 @@ function LoginForm() {
   const passwordInputProps = {
     id: "password",
     name: "password",
-    type: showPassword ? "text" : "password",
+    type: type,
     autoComplete: "current-password",
     placeholder: "비밀번호를 입력하세요",
     value: password,
@@ -80,12 +82,8 @@ function LoginForm() {
           <label htmlFor="password">비밀번호</label>
           <div className="password-wrapper">
             <InputField className="password-input" {...passwordInputProps} />
-            <button
-              type="button"
-              className="password-toggle"
-              aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-              onClick={() => setShowPassword((prev) => !prev)}>
-              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+            <button type="button" className="password-toggle" onClick={toggle}>
+              {isVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
           </div>
 

@@ -7,16 +7,29 @@ import {
   getPasswordConfirmError,
   getNicknameError,
   getTermsError,
+  validateSignupForm,
 } from "../../../hooks/useAuthValidation";
-import "./SignupForm.css";
+import "../Auth.css";
 import { IoIosWarning } from "react-icons/io";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { mockSignup } from "../../../mocks/auth";
 import { toast } from "react-toastify";
 import { AUTH_MESSAGES } from "../../../constants/messages";
+import { usePasswordToggle } from "../../../hooks/usePasswordToggle";
 
 function SignupForm() {
+  const {
+    isVisible: isPwdVisible,
+    toggle: togglePwd,
+    type: pwdType,
+  } = usePasswordToggle();
+  const {
+    isVisible: isConfirmVisible,
+    toggle: toggleConfirm,
+    type: confirmType,
+  } = usePasswordToggle();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
@@ -24,9 +37,6 @@ function SignupForm() {
   const [emailTouched, setEmailTouched] = useState(false);
   const [passwordTouched, setPasswordTouched] = useState(false);
   const [passwordConfirmTouched, setPasswordConfirmTouched] = useState(false);
-
-  const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordConfirm, setShowPasswordConfirm] = useState(false);
 
   const [nickname, setNickname] = useState("");
   const [nicknameTouched, setNicknameTouched] = useState(false);
@@ -55,12 +65,12 @@ function SignupForm() {
   const nicknameError = getNicknameError(nickname, nicknameTouched);
   const termsError = getTermsError(agreeTerms, termsTouched);
 
-  const isFormValid =
-    !emailError &&
-    !passwordError &&
-    !passwordConfirmError &&
-    !nicknameError &&
-    !termsError;
+  const isFormValid = validateSignupForm(
+    nickname,
+    email,
+    password,
+    passwordConfirm,
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -72,11 +82,8 @@ function SignupForm() {
 
     try {
       const user = await mockSignup(email, password, nickname);
-
       toast.success(`${user.nickname}님, ${AUTH_MESSAGES.SIGNUP_SUCCESS}`);
-
       console.log("signup data:", signupData);
-
       navigate("../login");
     } catch (error) {
       const errorMessage =
@@ -134,7 +141,7 @@ function SignupForm() {
               id="password"
               name="password"
               className="password-input"
-              type={showPassword ? "text" : "password"}
+              type={pwdType}
               placeholder="비밀번호를 입력하세요"
               value={password}
               autoComplete="current-password"
@@ -144,9 +151,8 @@ function SignupForm() {
             <button
               type="button"
               className="password-toggle"
-              aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-              onClick={() => setShowPassword((prev) => !prev)}>
-              {showPassword ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
+              onClick={togglePwd}>
+              {isPwdVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
           </div>
           {passwordError && (
@@ -163,9 +169,9 @@ function SignupForm() {
               id="passwordConfirm"
               name="passwordConfirm"
               className="password-input"
-              type={showPasswordConfirm ? "text" : "password"}
+              type={confirmType}
               placeholder="비밀번호를 다시 입력하세요"
-              autoComplete="current-password"
+              autoComplete="new-password"
               value={passwordConfirm}
               onChange={(e) => setPasswordConfirm(e.target.value)}
               onBlur={() => setPasswordConfirmTouched(true)}
@@ -174,14 +180,10 @@ function SignupForm() {
               type="button"
               className="password-toggle"
               aria-label={
-                showPasswordConfirm ? "비밀번호 숨기기" : "비밀번호 보기"
+                isConfirmVisible ? "비밀번호 숨기기" : "비밀번호 보기"
               }
-              onClick={() => setShowPasswordConfirm((prev) => !prev)}>
-              {showPasswordConfirm ? (
-                <AiOutlineEye />
-              ) : (
-                <AiOutlineEyeInvisible />
-              )}
+              onClick={toggleConfirm}>
+              {isConfirmVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
             </button>
           </div>
           {passwordConfirmError && (
@@ -193,8 +195,9 @@ function SignupForm() {
       </div>
 
       <div className="auth-form__field">
-        <label className="terms-checkbox">
+        <label htmlFor="agreeTerms" className="terms-checkbox">
           <input
+            id="agreeTerms"
             type="checkbox"
             checked={agreeTerms}
             onChange={(e) => {

@@ -2,7 +2,7 @@ export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const getEmailError = (
   email: string,
-  touched: boolean
+  touched: boolean,
 ): string | null => {
   if (!touched) return null;
   if (!email) return "이메일을 입력해주세요.";
@@ -10,10 +10,19 @@ export const getEmailError = (
   return null;
 };
 
+export const getNicknameError = (
+  nickname: string,
+  touched: boolean,
+): string | null => {
+  if (!touched) return null;
+  if (!nickname) return "닉네임을 입력해주세요.";
+  return null;
+};
+
 export const getPasswordError = (
   password: string,
   touched: boolean,
-  minLength = 8
+  minLength = 8,
 ): string | null => {
   if (!touched) return null;
   if (!password) return "비밀번호를 입력해주세요.";
@@ -25,7 +34,7 @@ export const getPasswordError = (
 export const getPasswordConfirmError = (
   password: string,
   passwordConfirm: string,
-  touched: boolean
+  touched: boolean,
 ): string | null => {
   if (!touched) return null;
   if (!passwordConfirm) return "비밀번호 확인을 입력해주세요.";
@@ -33,20 +42,29 @@ export const getPasswordConfirmError = (
   return null;
 };
 
-export const getNicknameError = (
-  nickname: string,
-  touched: boolean
-): string | null => {
-  if (!touched) return null;
-  if (!nickname) return "닉네임을 입력해주세요.";
-  return null;
-};
-
 export const getTermsError = (
   agreed: boolean,
-  touched: boolean
+  touched: boolean,
 ): string | null => {
   if (!touched) return null;
   if (!agreed) return "약관에 동의해주세요.";
   return null;
+};
+
+export const validateLoginForm = (email: string, password: string) => {
+  return !getEmailError(email, true) && !getPasswordError(password, true);
+};
+
+export const validateSignupForm = (
+  email: string,
+  nickname: string,
+  password: string,
+  passwordConfirm: string,
+) => {
+  return (
+    !getEmailError(email, true) &&
+    !getNicknameError(nickname, true) &&
+    !getPasswordError(password, true) &&
+    !getPasswordConfirmError(password, passwordConfirm, true)
+  );
 };
