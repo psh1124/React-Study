@@ -1,5 +1,14 @@
 export const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export const getNicknameError = (
+  nickname: string,
+  touched: boolean,
+): string | null => {
+  if (!touched) return null;
+  if (!nickname) return "닉네임을 입력해주세요.";
+  return null;
+};
+
 export const getEmailError = (
   email: string,
   touched: boolean,
@@ -7,15 +16,6 @@ export const getEmailError = (
   if (!touched) return null;
   if (!email) return "이메일을 입력해주세요.";
   if (!emailRegex.test(email)) return "이메일 형식이 올바르지 않습니다.";
-  return null;
-};
-
-export const getNicknameError = (
-  nickname: string,
-  touched: boolean,
-): string | null => {
-  if (!touched) return null;
-  if (!nickname) return "닉네임을 입력해주세요.";
   return null;
 };
 
@@ -56,15 +56,17 @@ export const validateLoginForm = (email: string, password: string) => {
 };
 
 export const validateSignupForm = (
-  email: string,
   nickname: string,
+  email: string,
   password: string,
   passwordConfirm: string,
+  agreeTerms: boolean
 ) => {
   return (
-    !getEmailError(email, true) &&
     !getNicknameError(nickname, true) &&
+    !getEmailError(email, true) &&
     !getPasswordError(password, true) &&
-    !getPasswordConfirmError(password, passwordConfirm, true)
+    !getPasswordConfirmError(password, passwordConfirm, true) &&
+    agreeTerms
   );
 };
