@@ -14,8 +14,10 @@ import { useAuth } from "../../../context/useAuth";
 import { mockLogin } from "../../../mocks/auth";
 import { toast } from "react-toastify";
 import { usePasswordToggle } from "../../../hooks/usePasswordToggle";
+import { useLoading } from "../../../context/useLoading";
 
 function LoginForm() {
+  const { setLoading } = useLoading();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailTouched, setEmailTouched] = useState(false);
@@ -54,6 +56,8 @@ function LoginForm() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    setLoading(true);
+
     try {
       const user = await mockLogin(email, password);
       login(user);
@@ -62,6 +66,8 @@ function LoginForm() {
       });
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
