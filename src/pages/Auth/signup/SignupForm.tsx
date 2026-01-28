@@ -17,8 +17,11 @@ import { mockSignup } from "../../../mocks/auth";
 import { toast } from "react-toastify";
 import { AUTH_MESSAGES } from "../../../constants/messages";
 import { usePasswordToggle } from "../../../hooks/usePasswordToggle";
+import { useLoading } from "../../../context/useLoading";
 
 function SignupForm() {
+  const { setLoading } = useLoading();
+
   const {
     isVisible: isPwdVisible,
     toggle: togglePwd,
@@ -70,6 +73,7 @@ function SignupForm() {
     email,
     password,
     passwordConfirm,
+    agreeTerms,
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -80,6 +84,8 @@ function SignupForm() {
       return;
     }
 
+    setLoading(true);
+
     try {
       const user = await mockSignup(email, password, nickname);
       toast.success(`${user.nickname}님, ${AUTH_MESSAGES.SIGNUP_SUCCESS}`);
@@ -89,6 +95,8 @@ function SignupForm() {
       const errorMessage =
         error instanceof Error ? error.message : "회원가입에 실패했습니다.";
       toast.error(errorMessage);
+    } finally {
+      setLoading(false);
     }
   };
   return (
