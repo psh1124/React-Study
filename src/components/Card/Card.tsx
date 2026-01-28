@@ -2,7 +2,7 @@ import { usePostLike } from "../../hooks/usePostLikes";
 import "./Card.css";
 
 interface CardProps {
-  id: number;
+  id?: number;
   title: string;
   content: string;
   category?: string;
@@ -20,11 +20,11 @@ function Card({
   category,
   author,
   date,
-  likes = 0,
-  comments = 0,
+  likes,
+  comments,
   onClick,
 }: CardProps) {
-  const { isLiked, likeCount, toggleLike } = usePostLike(id, likes);
+  const { isLiked, likeCount, toggleLike } = usePostLike(id || 0, likes || 0);
 
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
