@@ -1,33 +1,33 @@
 import { getMockUsers, saveMockUsers } from "./users";
 
+const MOCK_API_DELAY = 500;
+
 export function mockLogin(email: string, password: string) {
-  return new Promise<{ id: number; email: string; nickname: string }>((resolve, reject) => {
-    setTimeout(() => {
-      const users = getMockUsers();
+  return new Promise<{ id: number; email: string; nickname: string }>(
+    (resolve, reject) => {
+      setTimeout(() => {
+        const users = getMockUsers();
 
-      const user = users.find(
-        (u) => u.email === email && u.password === password
-      );
+        const user = users.find(
+          (u) => u.email === email && u.password === password,
+        );
 
-      if (!user) {
-        reject(new Error("이메일 또는 비밀번호가 올바르지 않습니다."));
-        return;
-      }
+        if (!user) {
+          reject(new Error("이메일 또는 비밀번호가 올바르지 않습니다."));
+          return;
+        }
 
-      resolve({
-        id: user.id,
-        email: user.email,
-        nickname: user.nickname,
-      });
-    }, 500);
-  });
+        resolve({
+          id: user.id,
+          email: user.email,
+          nickname: user.nickname,
+        });
+      }, MOCK_API_DELAY);
+    },
+  );
 }
 
-export function mockSignup(
-  email: string,
-  password: string,
-  nickname: string
-) {
+export function mockSignup(email: string, password: string, nickname: string) {
   return new Promise<{ id: number; email: string; nickname: string }>(
     (resolve, reject) => {
       setTimeout(() => {
@@ -53,8 +53,8 @@ export function mockSignup(
           email: newUser.email,
           nickname: newUser.nickname,
         });
-      }, 500);
-    }
+      }, MOCK_API_DELAY);
+    },
   );
 }
 
@@ -66,6 +66,6 @@ export function mockWithdraw(userId: number) {
 
       saveMockUsers(filtered);
       resolve();
-    }, 500);
+    }, MOCK_API_DELAY);
   });
 }
