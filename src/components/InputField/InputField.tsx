@@ -3,7 +3,7 @@ import "./InputField.css";
 interface InputFieldProps {
   id?: string;
   name?: string;
-  className: string;
+  className?: string;
   type?: string;
   placeholder?: string;
   value: string;
