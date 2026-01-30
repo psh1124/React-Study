@@ -7,22 +7,28 @@ import { useAuth } from "../../context/useAuth";
 import { AUTH_MESSAGES } from "../../constants/messages";
 import { mockWithdraw } from "../../mocks/auth";
 import "./MyPage.css";
+import { useState } from "react";
 
 function MyPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const [isWithdrawing, setIsWithdrawing] = useState(false);
 
   const executeWithdraw = async (closeToast: () => void) => {
     if (!user) return;
+
+    setIsWithdrawing(true);
+
     try {
-      closeToast();
       await mockWithdraw(user.id);
+      closeToast();
       toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS);
       logout();
       navigate("/", { replace: true });
     } catch (error) {
       console.error(error);
       toast.error("탈퇴 처리 중 오류가 발생했습니다.");
+      setIsWithdrawing(false);
     }
   };
 
@@ -38,6 +44,8 @@ function MyPage() {
           <div className="withdraw-confirm-buttons">
             <Button
               variant="danger"
+              loading={isWithdrawing}
+              disabled={isWithdrawing}
               onClick={() => executeWithdraw(closeToast)}>
               탈퇴
             </Button>

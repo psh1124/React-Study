@@ -1,15 +1,27 @@
-import { useNavigate } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate, NavLink } from "react-router-dom";
 import "./Header.css";
 import { useAuth } from "../../context/useAuth";
+import Button from "../Button/Button";
 
 function Header() {
   const navigate = useNavigate();
   const { isLoggedIn, user, logout } = useAuth();
+  const [isLogoutLoading, setIsLogoutLoading] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
+  const handleLogout = async () => {
+    setIsLogoutLoading(true);
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      logout();
+      navigate("/login");
+    } catch (error) {
+      console.error("로그아웃 실패:", error);
+    } finally {
+      setIsLogoutLoading(false);
+    }
   };
 
   return (
@@ -30,16 +42,20 @@ function Header() {
           홈
         </NavLink>
 
-        {/* 로그인 상태 */}
         {isLoggedIn ? (
           <>
             <NavLink to="mypage" end className="nav-item user-nickname">
               {user?.nickname}님
             </NavLink>
 
-            <button className="nav-item logout-btn" onClick={handleLogout}>
+            <Button
+              variant="danger"
+              loading={isLogoutLoading}
+              onClick={handleLogout}
+              className="nav-item logout-btn"
+              style={{ padding: "0.4em 0.8em", minHeight: "2.2rem" }}>
               로그아웃
-            </button>
+            </Button>
           </>
         ) : (
           <>
