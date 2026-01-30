@@ -10,6 +10,7 @@ interface PasswordFieldProps {
   value: string;
   error?: string | null;
   autoComplete?: string;
+  disabled: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
@@ -21,6 +22,7 @@ function PasswordField({
   value,
   error,
   autoComplete = "current-password",
+  disabled,
   onChange,
   onBlur,
 }: PasswordFieldProps) {
@@ -38,6 +40,7 @@ function PasswordField({
           placeholder={placeholder}
           value={value}
           autoComplete={autoComplete}
+          disabled={disabled}
           onChange={onChange}
           onBlur={onBlur}
         />
@@ -45,6 +48,7 @@ function PasswordField({
           type="button"
           className="password-toggle"
           onClick={toggle}
+          disabled={disabled}
           aria-label={isVisible ? "비밀번호 숨기기" : "비밀번호 보기"}>
           {isVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
         </button>
