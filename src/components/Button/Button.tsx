@@ -1,27 +1,27 @@
 import "./Button.css";
 
-interface ButtonProps {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
-  disabled?: boolean;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-  variant?: "primary" | "danger";
+  variant?: "primary" | "danger" | "secondary";
+  loading?: boolean;
 }
 
 function Button({
   children,
   disabled = false,
-  onClick,
+  loading = false,
   type = "button",
   variant = "primary",
+  className = "",
+  ...props
 }: ButtonProps) {
   return (
     <button
       type={type}
-      disabled={disabled}
-      onClick={onClick}
-      className={`button ${variant}`}>
-      {children}
+      disabled={disabled || loading}
+      className={`button ${variant} ${loading ? "loading" : ""} ${className}`}
+      {...props}>
+      {loading ? <div className="spinner" /> : children}
     </button>
   );
 }
