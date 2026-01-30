@@ -8,6 +8,7 @@ interface InputFieldProps {
   placeholder?: string;
   value: string;
   autoComplete?: string;
+  disabled?: boolean;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur?: () => void;
 }
@@ -20,6 +21,7 @@ function InputField({
   placeholder,
   value,
   autoComplete,
+  disabled,
   onChange,
   onBlur,
 }: InputFieldProps) {
@@ -32,6 +34,7 @@ function InputField({
       placeholder={placeholder}
       value={value}
       autoComplete={autoComplete}
+      disabled={disabled}
       onChange={onChange}
       onBlur={onBlur}
     />

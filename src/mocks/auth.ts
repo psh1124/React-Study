@@ -1,6 +1,7 @@
 import { getMockUsers, saveMockUsers } from "./users";
 
 const MOCK_API_DELAY = 500;
+const MOCK_SIGNUP_DELAY = 2000;
 
 export function mockLogin(email: string, password: string) {
   return new Promise<{ id: number; email: string; nickname: string }>(
@@ -53,7 +54,7 @@ export function mockSignup(email: string, password: string, nickname: string) {
           email: newUser.email,
           nickname: newUser.nickname,
         });
-      }, MOCK_API_DELAY);
+      }, MOCK_SIGNUP_DELAY);
     },
   );
 }

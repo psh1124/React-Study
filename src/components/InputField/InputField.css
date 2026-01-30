@@ -1,8 +1,35 @@
 .input-field {
-  padding: 0.5rem;
+  padding: 0.75rem 1rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
   width: 100%;
   box-sizing: border-box;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  background-color: #f9fafb;
+}
+
+.input-field:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+  background-color: #fff;
+  transform: translateY(-1px);
+}
+
+.input-field--error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+.input-field--error:focus {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+  background-color: #fff;
+}
+
+.input-field:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
 }
