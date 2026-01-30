@@ -14,12 +14,11 @@ import {
 } from "../../../hooks/useAuthValidation";
 import { mockSignup } from "../../../mocks/auth";
 import { AUTH_MESSAGES } from "../../../constants/messages";
-import { useLoading } from "../../../context/useLoading";
 import "../Auth.css";
 import AuthField from "../../../components/AuthField/AuthField";
 
 function SignupForm() {
-  const { setLoading } = useLoading();
+  const [isSignupLoading, setisSignupLoading] = useState(false);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -77,7 +76,7 @@ function SignupForm() {
       return;
     }
 
-    setLoading(true);
+    setisSignupLoading(true);
     try {
       const user = await mockSignup(
         formData.email,
@@ -91,7 +90,7 @@ function SignupForm() {
         error instanceof Error ? error.message : "회원가입에 실패했습니다.";
       toast.error(errorMessage);
     } finally {
-      setLoading(false);
+      setisSignupLoading(false);
     }
   };
 
@@ -105,6 +104,7 @@ function SignupForm() {
           className="nickname-input"
           value={formData.nickname}
           error={errors.nickname}
+          disabled={isSignupLoading}
           onChange={handleChange}
           onBlur={() => handleBlur("nickname")}
         />
@@ -118,6 +118,7 @@ function SignupForm() {
           autoComplete="email"
           value={formData.email}
           error={errors.email}
+          disabled={isSignupLoading}
           onChange={handleChange}
           onBlur={() => handleBlur("email")}
         />
@@ -129,6 +130,7 @@ function SignupForm() {
           autoComplete="new-password"
           value={formData.password}
           error={errors.password}
+          disabled={isSignupLoading}
           onChange={handleChange}
           onBlur={() => handleBlur("password")}
         />
@@ -140,6 +142,7 @@ function SignupForm() {
           autoComplete="new-password"
           value={formData.passwordConfirm}
           error={errors.passwordConfirm}
+          disabled={isSignupLoading}
           onChange={handleChange}
           onBlur={() => handleBlur("passwordConfirm")}
         />
@@ -152,6 +155,7 @@ function SignupForm() {
             name="agreeTerms"
             type="checkbox"
             checked={formData.agreeTerms}
+            disabled={isSignupLoading}
             onChange={handleChange}
           />
           <span>이용약관 및 개인정보 처리방침에 동의합니다</span>
@@ -160,7 +164,10 @@ function SignupForm() {
       </div>
 
       <div className="auth-form__actions">
-        <Button type="submit" disabled={!isFormValid}>
+        <Button
+          type="submit"
+          loading={isSignupLoading}
+          disabled={!isFormValid || isSignupLoading}>
           회원가입
         </Button>
       </div>

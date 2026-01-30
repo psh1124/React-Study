@@ -11,12 +11,11 @@ import {
 } from "../../../hooks/useAuthValidation";
 import { useAuth } from "../../../context/useAuth";
 import { mockLogin } from "../../../mocks/auth";
-import { useLoading } from "../../../context/useLoading";
 import "../Auth.css";
 
 function LoginForm() {
-  const { setLoading } = useLoading();
   const { login } = useAuth();
+  const [isLoginLoading, setIsLoginLoading] = useState(false);
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [touched, setTouched] = useState<Record<string, boolean>>({
@@ -42,7 +41,9 @@ function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
+
+    setIsLoginLoading(true);
+
     try {
       const user = await mockLogin(formData.email, formData.password);
       login(user);
@@ -50,7 +51,7 @@ function LoginForm() {
     } catch (error) {
       if (error instanceof Error) toast.error(error.message);
     } finally {
-      setLoading(false);
+      setIsLoginLoading(false);
     }
   };
 
@@ -65,6 +66,8 @@ function LoginForm() {
           className="email-input"
           value={formData.email}
           error={errors.email}
+          disabled={isLoginLoading}
+          autoComplete="username"
           onChange={handleChange}
           onBlur={() => handleBlur("email")}
         />
@@ -75,13 +78,14 @@ function LoginForm() {
           placeholder="비밀번호를 입력하세요"
           value={formData.password}
           error={errors.password}
+          disabled={isLoginLoading}
           onChange={handleChange}
           onBlur={() => handleBlur("password")}
         />
       </div>
 
       <div className="auth-form__actions">
-        <Button type="submit" disabled={!isFormValid}>
+        <Button type="submit" loading={isLoginLoading} disabled={!isFormValid}>
           로그인
         </Button>
       </div>
