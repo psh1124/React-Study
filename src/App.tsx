@@ -47,11 +47,12 @@ function NavigationWatcher() {
 }
 
 function App() {
+  const basename = import.meta.env.MODE === "production" ? "/React-Study" : "";
   return (
     <ErrorBoundary>
       <AuthProvider>
         <LoadingProvider>
-          <BrowserRouter>
+          <BrowserRouter basename={basename}>
             <NavigationWatcher />
             <Header />
             <Routes>
