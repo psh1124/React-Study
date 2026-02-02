@@ -1,3 +1,15 @@
+/* 공통 변수 설정 */
+:root {
+  --primary-color: #3b82f6;
+  --bg-light: #f8f9fa;
+  --bg-muted: #f1f2f6;
+  --border-color: #ddd;
+  --text-main: #333;
+  --text-muted: #747d8c;
+  --text-dark: #495057;
+}
+
+/* 상단 통계 바 */
 .home-stats {
   display: flex;
   margin-bottom: 1rem;
@@ -7,14 +19,15 @@
   padding: 0.5rem 1rem;
   border-radius: 0.5rem;
   font-size: 0.875rem;
-  color: #495057;
+  color: var(--text-dark);
 }
 
 .stat-badge strong {
-  color: #3b82f6;
+  color: var(--primary-color);
   margin-left: 0.25rem;
 }
 
+/* 컨트롤 영역 레이아웃 */
 .home-controls {
   display: flex;
   justify-content: space-between;
@@ -24,6 +37,14 @@
   flex-wrap: wrap;
 }
 
+.control-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* 카테고리 필터 버튼 */
 .category-filters {
   display: flex;
   gap: 0.3rem;
@@ -32,7 +53,7 @@
 .filter-btn {
   padding: 0.5rem 1rem;
   border-radius: 2rem;
-  border: 0.0625rem solid #ddd;
+  border: 0.0625rem solid var(--border-color);
   background: #fff;
   cursor: pointer;
   font-size: 0.875rem;
@@ -40,19 +61,119 @@
 }
 
 .filter-btn.active {
-  background: #333;
+  background: var(--text-main);
   color: #fff;
-  border-color: #333;
+  border-color: var(--text-main);
 }
 
+/* 검색창 */
 .search-bar input {
   padding: 0.6rem 1rem;
   border-radius: 0.5rem;
-  border: 0.0625rem solid #ddd;
+  border: 0.0625rem solid var(--border-color);
   width: 18.75rem;
   outline: none;
+  transition: border-color 0.2s;
 }
 
 .search-bar input:focus {
-  border-color: #3b82f6;
+  border-color: var(--primary-color);
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  padding: 4rem 0;
+  text-align: center;
+  background-color: var(--bg-light);
+  border-radius: 1rem;
+  border: 2px border-style dashed;
+  border-color: var(--border-color);
+}
+
+.empty-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.empty-message p {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  font-weight: bold;
+  margin: 0.2rem 0;
+}
+
+.empty-message .sub-text {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: normal;
+}
+
+/* 좋아요 필터 토글 */
+.liked-filter {
+  padding: 5px 12px;
+  border-radius: 8px;
+  background-color: var(--bg-light);
+  transition: background 0.2s;
+}
+
+.liked-filter:hover {
+  background-color: var(--bg-muted);
+}
+
+.liked-filter label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.filter-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+/* 정렬 옵션 (최신순/인기순) */
+.sort-options {
+  display: flex;
+  background-color: var(--bg-muted);
+  padding: 4px;
+  border-radius: 10px;
+  gap: 2px;
+}
+
+.sort-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.sort-btn:hover {
+  color: #2f3542;
+}
+
+.sort-btn.active {
+  background-color: #ffffff;
+  color: var(--primary-color);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 접근성용 숨김 처리 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }

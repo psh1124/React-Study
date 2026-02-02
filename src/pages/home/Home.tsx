@@ -1,106 +1,86 @@
+import { useMemo, useState, useEffect } from "react";
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
 import { useAuth } from "../../context/useAuth";
+import { MOCK_POSTS, type Post } from "../../data/mockData";
 import "./Home.css";
-import { useMemo, useState } from "react";
-
-interface Post {
-  id: number;
-  category: string;
-  title: string;
-  content: string;
-  author: string;
-  date: string;
-  likes: number;
-  comments: number;
-}
-
-const MOCK_POSTS: Post[] = [
-  {
-    id: 1,
-    category: "React",
-    title: "성능 최적화: useMemo와 useCallback 언제 써야 할까?",
-    content:
-      "무분별한 최적화는 오히려 성능을 저하시킬 수 있습니다. 실제 벤치마크 결과와 함께 효율적인 사용 시점을 알아봅니다.",
-    author: "리액트장인",
-    date: "2024.03.22",
-    likes: 42,
-    comments: 12,
-  },
-  {
-    id: 2,
-    category: "TypeScript",
-    title: "any 타입을 지양하고 Unknown 사용하기",
-    content:
-      "타입 안전성을 지키면서도 유연하게 코드를 짜는 방법! unknown 타입과 타입 가드의 조합을 살펴봅니다.",
-    author: "타입수호자",
-    date: "2024.03.21",
-    likes: 28,
-    comments: 5,
-  },
-  {
-    id: 3,
-    category: "Auth",
-    title: "JWT 인증 방식과 리프레시 토큰의 흐름",
-    content:
-      "프론트엔드에서 로그인 상태를 안전하게 유지하는 방법, 로컬 스토리지와 쿠키 중 어디가 더 안전할까요?",
-    author: "보안전문가",
-    date: "2024.03.20",
-    likes: 56,
-    comments: 18,
-  },
-  {
-    id: 4,
-    category: "Design",
-    title: "px 대신 rem을 사용해야 하는 진짜 이유",
-    content:
-      "반응형 웹과 웹 접근성을 위한 상대 단위 rem! 디자인 시스템 구축 시 고려해야 할 점들을 정리했습니다.",
-    author: "CSS마스터",
-    date: "2024.03.19",
-    likes: 34,
-    comments: 7,
-  },
-  {
-    id: 5,
-    category: "React",
-    title: "React Hook Form으로 폼 핸들링 정복하기",
-    content:
-      "복잡한 회원가입 폼, 유효성 검사 로직을 깔끔하게 유지하는 비결. 비제어 컴포넌트의 장점을 활용해 보세요.",
-    author: "폼빌더",
-    date: "2024.03.18",
-    likes: 21,
-    comments: 3,
-  },
-  {
-    id: 6,
-    category: "Backend",
-    title: "프론트엔드를 위한 가짜 API, MSW 활용법",
-    content:
-      "백엔드 API가 완성되기 전까지 기다리지 마세요. Mock Service Worker로 완벽한 개발 환경 구축하기.",
-    author: "워커홀릭",
-    date: "2024.03.17",
-    likes: 15,
-    comments: 4,
-  },
-];
 
 function Home() {
   const { user, isLoggedIn } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("전체");
+  const [sortBy, setSortBy] = useState<"latest" | "likes">("latest");
+  const [showOnlyLiked, setShowOnlyLiked] = useState(false);
 
-  const categories = ["전체", "React", "TypeScript", "Design", "Backend"];
+  //mockData 수정하고 버전 바꿔야 바로 반영됨(localStorage 수동 비우기 불필요)
+  const DATA_VERSION = "v2";
 
-  const filteredPosts = useMemo(() => {
-    return MOCK_POSTS.filter((post) => {
+  const [posts, setPosts] = useState<Post[]>(() => {
+    const savedVersion = localStorage.getItem("data_version");
+    const savedPosts = localStorage.getItem("blog_posts");
+
+    if (savedVersion === DATA_VERSION && savedPosts) {
+      return JSON.parse(savedPosts);
+    }
+
+    localStorage.setItem("data_version", DATA_VERSION);
+    return MOCK_POSTS;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("blog_posts", JSON.stringify(posts));
+
+    const likedIds = posts
+      .filter((post) => post.isLiked)
+      .map((post) => post.id);
+    localStorage.setItem("my_liked_ids", JSON.stringify(likedIds));
+  }, [posts]);
+
+  const categories = [
+    "전체",
+    "React",
+    "AI",
+    "TypeScript",
+    "Security",
+    "Design",
+    "Backend",
+  ];
+
+  const handleToggleLike = (id: number) => {
+    setPosts((prev) =>
+      prev.map((post) =>
+        post.id === id
+          ? {
+              ...post,
+              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
+              isLiked: !post.isLiked,
+            }
+          : post,
+      ),
+    );
+  };
+
+  const processedPosts = useMemo(() => {
+    const filtered = posts.filter((post) => {
       const matchesCategory =
-        selectedCategory === "전체" || post.category === selectedCategory;
+        selectedCategory === "전체" ||
+        post.category.toLowerCase() === selectedCategory.toLowerCase();
       const matchesSearch = post.title
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      return matchesCategory && matchesSearch;
+      const matchesLiked = showOnlyLiked ? post.isLiked : true;
+
+      return matchesCategory && matchesSearch && matchesLiked;
     });
-  }, [searchTerm, selectedCategory]);
+
+    return [...filtered].sort((a, b) => {
+      if (sortBy === "latest") {
+        return new Date(b.date).getTime() - new Date(a.date).getTime();
+      }
+      return b.likes - a.likes;
+    });
+  }, [posts, searchTerm, selectedCategory, sortBy, showOnlyLiked]);
+
   return (
     <Container>
       <header className="home-header">
@@ -116,10 +96,10 @@ function Home() {
 
       <div className="home-stats">
         <div className="stat-badge">
-          전체 포스트 <strong>{MOCK_POSTS.length}</strong>
+          전체 포스트 <strong>{posts.length}</strong>
         </div>
         <div className="stat-badge">
-          검색 결과 <strong>{filteredPosts.length}</strong>
+          검색 결과 <strong>{processedPosts.length}</strong>
         </div>
       </div>
 
@@ -135,31 +115,72 @@ function Home() {
           ))}
         </div>
 
-        <div className="search-bar">
-          <input
-            id="search"
-            type="text"
-            placeholder="주제나 내용을 검색해보세요"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+        <div className="control-row">
+          <div className="search-bar">
+            <label htmlFor="search-input" className="visually-hidden">
+              포스트 검색
+            </label>
+            <input
+              id="search-input"
+              type="text"
+              placeholder="주제나 내용을 검색해보세요"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="liked-filter">
+            <label htmlFor="liked-checkbox">
+              <input
+                id="liked-checkbox"
+                type="checkbox"
+                checked={showOnlyLiked}
+                onChange={(e) => setShowOnlyLiked(e.target.checked)}
+              />
+              <span className="filter-label">❤️ 내 좋아요 목록</span>
+            </label>
+          </div>
+
+          <div className="sort-options">
+            <button
+              className={`sort-btn ${sortBy === "latest" ? "active" : ""}`}
+              onClick={() => setSortBy("latest")}>
+              최신순
+            </button>
+            <button
+              className={`sort-btn ${sortBy === "likes" ? "active" : ""}`}
+              onClick={() => setSortBy("likes")}>
+              인기순
+            </button>
+          </div>
         </div>
       </section>
 
       <div className="posts-grid">
-        {filteredPosts.length > 0 ? (
-          filteredPosts.map((post) => <Card key={post.id} {...post} />)
+        {processedPosts.length > 0 ? (
+          processedPosts.map((post) => (
+            <Card
+              key={post.id}
+              {...post}
+              isLiked={post.isLiked}
+              onLike={() => handleToggleLike(post.id)}
+            />
+          ))
         ) : (
           <div className="empty-state">
-            <span className="icon">🔍</span>
-            <p>찾으시는 게시글이 없어요. 다른 키워드로 검색해보세요!</p>
-            <button
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCategory("전체");
-              }}>
-              초기화
-            </button>
+            {showOnlyLiked && !searchTerm ? (
+              <div className="empty-message">
+                <span className="empty-icon">❤️</span>
+                <p>아직 좋아요를 누른 포스트가 없습니다.</p>
+                <p className="sub-text">관심 있는 글에 하트를 눌러보세요!</p>
+              </div>
+            ) : (
+              <div className="empty-message">
+                <span className="empty-icon">🔍</span>
+                <p>검색 결과가 없습니다.</p>
+                <p className="sub-text">다른 키워드로 검색해보세요.</p>
+              </div>
+            )}
           </div>
         )}
       </div>

@@ -1,20 +1,21 @@
-import { usePostLike } from "../../hooks/usePostLikes";
 import "./Card.css";
 
 interface CardProps {
-  id?: number;
+  id: number;
   title: string;
   content: string;
   category?: string;
   author?: string;
   date?: string;
-  likes?: number;
+  likes: number;
   comments?: number;
+  isLiked?: boolean;
+  onLike: () => void;
   onClick?: () => void;
 }
 
 function Card({
-  id,
+  // id,
   title,
   content,
   category,
@@ -22,13 +23,13 @@ function Card({
   date,
   likes,
   comments,
+  isLiked,
+  onLike,
   onClick,
 }: CardProps) {
-  const { isLiked, likeCount, toggleLike } = usePostLike(id || 0, likes || 0);
-
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toggleLike();
+    onLike();
   };
 
   const hasFooter = likes !== undefined || comments !== undefined || date;
@@ -58,10 +59,10 @@ function Card({
                 className={`stat-item like-btn ${isLiked ? "active" : ""}`}
                 onClick={handleLikeClick}
                 aria-label="좋아요">
-                {isLiked ? "❤️" : "🤍"} {likeCount}
+                {isLiked ? "❤️" : "🤍"} {likes}
               </button>
               <span className="stat-item" aria-label="댓글">
-                💬 {comments}
+                💬 {comments || 0}
               </span>
             </div>
             {date && <span className="card__date">{date}</span>}
