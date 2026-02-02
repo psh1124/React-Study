@@ -1,10 +1,25 @@
 body {
   margin: 0;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
   background-color: #f9f9f9;
 }
 
 a {
   text-decoration: none;
   color: inherit;
+}
+
+#nprogress .bar {
+  background: #003cff !important;
+  height: 3px !important;
+}
+
+#nprogress .peg {
+  box-shadow:
+    0 0 10px #003cff,
+    0 0 5px #003cff !important;
+}
+
+#nprogress .spinner {
+  display: none;
 }

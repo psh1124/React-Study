@@ -5,4 +5,9 @@
   color: #ff4d4d;
   font-size: clamp(0.85rem, 2vw, 1rem);
   margin: 0;
+  line-height: 1;
+}
+
+.error svg {
+  flex-shrink: 0;
 }

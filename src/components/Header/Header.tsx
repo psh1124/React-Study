@@ -3,6 +3,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import "./Header.css";
 import { useAuth } from "../../context/useAuth";
 import Button from "../Button/Button";
+import { mockLogout } from "../../mocks/auth";
 
 function Header() {
   const navigate = useNavigate();
@@ -11,10 +12,8 @@ function Header() {
 
   const handleLogout = async () => {
     setIsLogoutLoading(true);
-
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
+      await mockLogout();
       logout();
       navigate("/login");
     } catch (error) {
@@ -26,11 +25,10 @@ function Header() {
 
   return (
     <header className="header">
-      <div className="logo">
-        <NavLink to="/" end className="logo">
-          React Study
-        </NavLink>
-      </div>
+      <NavLink to="/" end className="brand-group">
+        <img src="/favicon.png" alt="React Logo" className="header-logo" />
+        <span className="logo">React Study</span>
+      </NavLink>
 
       <nav className="nav">
         <NavLink
@@ -44,10 +42,9 @@ function Header() {
 
         {isLoggedIn ? (
           <>
-            <NavLink to="mypage" end className="nav-item user-nickname">
+            <NavLink to="/mypage" className="nav-item user-nickname">
               {user?.nickname}님
             </NavLink>
-
             <Button
               variant="danger"
               loading={isLogoutLoading}
