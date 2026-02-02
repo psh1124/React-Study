@@ -53,7 +53,9 @@ function PasswordField({
           {isVisible ? <AiOutlineEye /> : <AiOutlineEyeInvisible />}
         </button>
       </div>
-      {error && <ErrorMessage message={error} />}
+      <div className="message-container">
+        {error && <ErrorMessage message={error} />}
+      </div>
     </div>
   );
 }

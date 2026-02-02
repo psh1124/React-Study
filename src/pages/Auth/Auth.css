@@ -1,4 +1,4 @@
-/* 페이지 공통 레이아웃 */
+/* --- 페이지 공통 레이아웃 --- */
 .auth-page .container {
   padding: 0;
 }
@@ -10,66 +10,144 @@
   font-weight: 700;
 }
 
-/* 폼 공통 레이아웃 */
+/* --- 폼 전체 레이아웃 --- */
 .auth-form {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.2rem, 2.5vh, 2rem);
+  gap: clamp(1rem, 2vh, 1.5rem);
 }
 
 .auth-form__fields {
   display: flex;
   flex-direction: column;
-  gap: clamp(1.2rem, 2.5vw, 2rem);
+  gap: clamp(0.5rem, 1.5vw, 1rem); /* 필드 그룹 간의 간격 */
 }
 
+/* --- 개별 필드(Label + Input + Message) 레이아웃 --- */
 .auth-form__field {
   display: flex;
   flex-direction: column;
-  gap: clamp(0.5rem, 2vh, 0.6rem);
+  gap: 0.4rem; /* 라벨과 인풋 사이 간격 */
 }
 
-/* 비밀번호 필드 전용 스타일 */
+/* 메시지가 들어갈 공간을 미리 확보하여 폼 흔들림 방지 */
+.message-container {
+  min-height: 1.5rem; /* 메시지 한 줄 높이 고정 */
+  display: flex;
+  align-items: center;
+  padding-left: 0.1rem;
+}
+
+/* --- 메시지 스타일 (에러 & 성공 공통) --- */
+.auth-form .error,
+.auth-success-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: clamp(0.8rem, 2vw, 0.9rem);
+  line-height: 1.2;
+  margin: 0; /* message-container 안에서 관리하므로 마진 제거 */
+  animation: fadeIn 0.3s ease;
+}
+
+.auth-form .error {
+  color: #ff4d4d;
+}
+
+.auth-success-msg {
+  color: #10b981;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 비밀번호 필드 전용 (눈 아이콘) --- */
 .password-wrapper {
   position: relative;
   width: 100%;
 }
 
 .password-input {
-  padding-right: clamp(3rem, 6vw, 3.5rem);
+  padding-right: clamp(2.5rem, 5vw, 3rem);
 }
 
 .password-toggle {
   position: absolute;
   top: 50%;
-  right: clamp(0.5rem, 1.5vw, 0.75rem);
+  right: 0.75rem;
   transform: translateY(-50%);
   background: none;
   border: none;
-  padding: 0;
+  padding: 0.2rem;
   cursor: pointer;
-  font-size: clamp(1.1rem, 2.5vw, 1.3rem);
-  line-height: 1;
-}
-
-/* 에러 메시지 공통 */
-.auth-form .error {
+  font-size: 1.2rem;
   display: flex;
   align-items: center;
-  gap: 0.35rem;
-  color: #ff4d4d;
-  font-size: clamp(0.85rem, 2vw, 1rem);
-  margin: 0;
+  color: #666;
+  transition: color 0.2s;
 }
 
-/* 하단 액션 및 링크 */
+.password-toggle:hover {
+  color: #333;
+}
+
+/* --- 약관 동의 체크박스 --- */
+.terms-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+  color: #4b5563;
+}
+
+/* --- 하단 액션 버튼 및 링크 --- */
 .auth-form__actions {
   display: flex;
   justify-content: center;
+  margin-top: 0.5rem;
 }
 
 .auth-footer-link {
   text-align: center;
   font-size: clamp(0.9rem, 2vw, 1rem);
-  margin-top: 1rem;
+  margin-top: 1.5rem;
+  color: #666;
+}
+
+.auth-footer-link a {
+  margin-left: 0.5rem;
+  color: #3b82f6;
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.2s ease;
+  display: inline-block;
+}
+
+.auth-footer-link a:hover {
+  color: #2563eb;
+}
+
+.auth-footer-link a::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -2px;
+  left: 0;
+  background-color: currentColor;
+  transition: width 0.3s ease;
+}
+
+.auth-footer-link a:hover::after {
+  width: 100%;
 }

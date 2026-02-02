@@ -12,6 +12,7 @@ import {
 import { useAuth } from "../../../context/useAuth";
 import { mockLogin } from "../../../mocks/auth";
 import "../Auth.css";
+import LoadingOverlay from "../../../components/LoadingOverlay/LoadingOverlay";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -57,6 +58,7 @@ function LoginForm() {
 
   return (
     <form onSubmit={handleLogin} className="auth-form">
+      {isLoginLoading && <LoadingOverlay />}
       <div className="auth-form__fields">
         <AuthField
           id="email"

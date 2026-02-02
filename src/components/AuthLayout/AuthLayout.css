@@ -23,5 +23,5 @@
 }
 
 .auth-layout--signup {
-  padding-top: clamp(2rem, 10vh, 4rem);
+  padding-top: clamp(1rem, 5vh, 5rem);
 }

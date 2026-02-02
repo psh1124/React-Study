@@ -1,6 +1,6 @@
 import { getMockUsers, saveMockUsers } from "./users";
 
-const MOCK_API_DELAY = 500;
+const MOCK_API_DELAY = 1500;
 const MOCK_SIGNUP_DELAY = 2000;
 
 export function mockLogin(email: string, password: string) {
@@ -28,16 +28,15 @@ export function mockLogin(email: string, password: string) {
   );
 }
 
+export const mockLogout = async (): Promise<void> => {
+  return new Promise((resolve) => setTimeout(resolve, MOCK_API_DELAY + 500));
+};
+
 export function mockSignup(email: string, password: string, nickname: string) {
   return new Promise<{ id: number; email: string; nickname: string }>(
-    (resolve, reject) => {
+    (resolve) => {
       setTimeout(() => {
         const users = getMockUsers();
-
-        if (users.some((u) => u.email === email)) {
-          reject(new Error("이미 사용 중인 이메일입니다."));
-          return;
-        }
 
         const newUser = {
           id: users.length ? users[users.length - 1].id + 1 : 1,
@@ -59,6 +58,16 @@ export function mockSignup(email: string, password: string, nickname: string) {
   );
 }
 
+export function mockCheckEmail(email: string) {
+  return new Promise<boolean>((resolve) => {
+    setTimeout(() => {
+      const users = getMockUsers();
+      const isDuplicated = users.some((u) => u.email === email);
+      resolve(isDuplicated);
+    }, 300);
+  });
+}
+
 export function mockWithdraw(userId: number) {
   return new Promise<void>((resolve) => {
     setTimeout(() => {
@@ -67,6 +76,6 @@ export function mockWithdraw(userId: number) {
 
       saveMockUsers(filtered);
       resolve();
-    }, MOCK_API_DELAY);
+    }, MOCK_API_DELAY - 500);
   });
 }

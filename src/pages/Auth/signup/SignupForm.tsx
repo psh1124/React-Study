@@ -12,10 +12,11 @@ import {
   getTermsError,
   validateSignupForm,
 } from "../../../hooks/useAuthValidation";
-import { mockSignup } from "../../../mocks/auth";
+import { mockCheckEmail, mockSignup } from "../../../mocks/auth";
 import { AUTH_MESSAGES } from "../../../constants/messages";
 import "../Auth.css";
 import AuthField from "../../../components/AuthField/AuthField";
+import LoadingOverlay from "../../../components/LoadingOverlay/LoadingOverlay";
 
 function SignupForm() {
   const [isSignupLoading, setisSignupLoading] = useState(false);
@@ -48,6 +49,30 @@ function SignupForm() {
   const handleBlur = (name: string) => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
+  const [emailCheckMessage, setEmailCheckMessage] = useState("");
+  const isEmailDuplicated = emailCheckMessage.includes("이미");
+
+  const handleEmailBlur = async () => {
+    handleBlur("email");
+
+    const email = formData.email;
+    if (!email || getEmailError(email, true)) {
+      setEmailCheckMessage("");
+      return;
+    }
+
+    try {
+      const isDuplicated = await mockCheckEmail(email);
+
+      if (isDuplicated) {
+        setEmailCheckMessage("이미 사용 중인 이메일입니다.");
+      } else {
+        setEmailCheckMessage("사용 가능한 이메일입니다.");
+      }
+    } catch {
+      setEmailCheckMessage("중복 확인 중 오류가 발생했습니다.");
+    }
+  };
 
   const errors = {
     nickname: getNicknameError(formData.nickname, touched.nickname),
@@ -61,13 +86,14 @@ function SignupForm() {
     terms: getTermsError(formData.agreeTerms, touched.agreeTerms),
   };
 
-  const isFormValid = validateSignupForm(
-    formData.nickname,
-    formData.email,
-    formData.password,
-    formData.passwordConfirm,
-    formData.agreeTerms,
-  );
+  const isFormValid =
+    validateSignupForm(
+      formData.nickname,
+      formData.email,
+      formData.password,
+      formData.passwordConfirm,
+      formData.agreeTerms,
+    ) && !isEmailDuplicated;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -96,6 +122,7 @@ function SignupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="auth-form">
+      {isSignupLoading && <LoadingOverlay />}
       <div className="auth-form__fields">
         <AuthField
           id="nickname"
@@ -117,10 +144,16 @@ function SignupForm() {
           className="email-input"
           autoComplete="email"
           value={formData.email}
-          error={errors.email}
+          error={errors.email || (isEmailDuplicated ? emailCheckMessage : null)}
+          successMessage={
+            !errors.email && !isEmailDuplicated ? emailCheckMessage : null
+          }
           disabled={isSignupLoading}
-          onChange={handleChange}
-          onBlur={() => handleBlur("email")}
+          onChange={(e) => {
+            handleChange(e);
+            setEmailCheckMessage("");
+          }}
+          onBlur={handleEmailBlur}
         />
 
         <PasswordField
