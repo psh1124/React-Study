@@ -1,16 +1,16 @@
 import "./Card.css";
 
 interface CardProps {
-  id: number;
+  id?: number;
   title: string;
   content: string;
   category?: string;
   author?: string;
   date?: string;
-  likes: number;
+  likes?: number;
   comments?: number;
   isLiked?: boolean;
-  onLike: () => void;
+  onLike?: () => void;
   onClick?: () => void;
 }
 
@@ -29,7 +29,9 @@ function Card({
 }: CardProps) {
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onLike();
+    if (onLike) {
+      onLike();
+    }
   };
 
   const hasFooter = likes !== undefined || comments !== undefined || date;
