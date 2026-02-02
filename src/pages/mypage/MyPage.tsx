@@ -8,25 +8,50 @@ import { AUTH_MESSAGES } from "../../constants/messages";
 import { mockWithdraw } from "../../mocks/auth";
 import "./MyPage.css";
 import { useState } from "react";
+import LoadingOverlay from "../../components/LoadingOverlay/LoadingOverlay";
 
 function MyPage() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [isWithdrawing, setIsWithdrawing] = useState(false);
 
-  const executeWithdraw = async (closeToast: () => void) => {
+  const executeWithdraw = async () => {
     if (!user) return;
 
     setIsWithdrawing(true);
 
+    toast.update("withdraw-confirm", {
+      render: ({ closeToast }) => (
+        <div className="withdraw-confirm-container">
+          <p className="withdraw-confirm-text">
+            {AUTH_MESSAGES.WITHDRAW_CONFIRM}
+          </p>
+          <div className="withdraw-confirm-buttons">
+            <Button variant="danger" loading={true} disabled={true}>
+              탈퇴
+            </Button>
+            <Button onClick={closeToast} disabled={true}>
+              취소
+            </Button>
+          </div>
+        </div>
+      ),
+    });
+
     try {
       await mockWithdraw(user.id);
-      closeToast();
-      toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS);
-      logout();
+
+      toast.dismiss();
+
+      toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS, {
+        toastId: "withdraw-success",
+      });
       navigate("/", { replace: true });
-    } catch (error) {
-      console.error(error);
+
+      setTimeout(() => {
+        logout();
+      }, 100);
+    } catch {
       toast.error("탈퇴 처리 중 오류가 발생했습니다.");
       setIsWithdrawing(false);
     }
@@ -46,14 +71,19 @@ function MyPage() {
               variant="danger"
               loading={isWithdrawing}
               disabled={isWithdrawing}
-              onClick={() => executeWithdraw(closeToast)}>
+              onClick={() => {
+                executeWithdraw();
+              }}>
               탈퇴
             </Button>
-            <Button onClick={closeToast}>취소</Button>
+            <Button onClick={closeToast} disabled={isWithdrawing}>
+              취소
+            </Button>
           </div>
         </div>
       ),
       {
+        toastId: "withdraw-confirm",
         position: "top-center",
         autoClose: false,
         closeOnClick: false,
@@ -64,6 +94,7 @@ function MyPage() {
 
   return (
     <Container>
+      {isWithdrawing && <LoadingOverlay />}
       <header className="mypage-header">
         <h1>마이페이지</h1>
         <p className="subtitle">내 계정 정보 및 활동 내역을 확인하세요.</p>
