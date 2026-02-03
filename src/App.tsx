@@ -5,8 +5,8 @@ import { ToastContainer, Slide } from "react-toastify";
 import nprogress from "nprogress";
 
 // 2. Context & Providers (전역 상태 관리)
-import { AuthProvider } from "./context/AuthProvider";
-import { LoadingProvider } from "./context/LoadingProvider";
+import { AuthProvider } from "./context/auth/AuthProvider";
+import { LoadingProvider } from "./context/loading/LoadingProvider";
 
 // 3. 내부 공통 컴포넌트 (UI 부품)
 import Header from "./components/Header/Header";
@@ -19,6 +19,8 @@ import Home from "./pages/home/Home";
 import Login from "./pages/Auth/login/Login";
 import Signup from "./pages/Auth/signup/Signup";
 import MyPage from "./pages/mypage/MyPage";
+import Write from "./pages/Write/Write";
+import Edit from "./pages/Write/Edit";
 
 // 5. 스타일 및 CSS (디자인)
 import "react-toastify/dist/ReactToastify.css";
@@ -82,6 +84,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <MyPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="write"
+                element={
+                  <ProtectedRoute>
+                    <Write />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/edit/:id"
+                element={
+                  <ProtectedRoute>
+                    <Edit />
                   </ProtectedRoute>
                 }
               />

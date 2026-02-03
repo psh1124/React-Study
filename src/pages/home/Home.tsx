@@ -1,40 +1,28 @@
-import { useMemo, useState, useEffect } from "react";
+import { useAuth } from "../../context/auth/useAuth";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { usePosts } from "../../hooks/usePosts";
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
-import { useAuth } from "../../context/useAuth";
-import { MOCK_POSTS, type Post } from "../../data/mockData";
 import "./Home.css";
 
 function Home() {
   const { user, isLoggedIn } = useAuth();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("전체");
-  const [sortBy, setSortBy] = useState<"latest" | "likes">("latest");
-  const [showOnlyLiked, setShowOnlyLiked] = useState(false);
+  const navigate = useNavigate();
 
-  //mockData 수정하고 버전 바꿔야 바로 반영됨(localStorage 수동 비우기 불필요)
-  const DATA_VERSION = "v2";
-
-  const [posts, setPosts] = useState<Post[]>(() => {
-    const savedVersion = localStorage.getItem("data_version");
-    const savedPosts = localStorage.getItem("blog_posts");
-
-    if (savedVersion === DATA_VERSION && savedPosts) {
-      return JSON.parse(savedPosts);
-    }
-
-    localStorage.setItem("data_version", DATA_VERSION);
-    return MOCK_POSTS;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("blog_posts", JSON.stringify(posts));
-
-    const likedIds = posts
-      .filter((post) => post.isLiked)
-      .map((post) => post.id);
-    localStorage.setItem("my_liked_ids", JSON.stringify(likedIds));
-  }, [posts]);
+  const {
+    posts,
+    allPostsCount,
+    searchTerm,
+    selectedCategory,
+    sortBy,
+    showOnlyLiked,
+    setSearchTerm,
+    setSelectedCategory,
+    setSortBy,
+    setShowOnlyLiked,
+    actions,
+  } = usePosts(user, isLoggedIn);
 
   const categories = [
     "전체",
@@ -46,60 +34,23 @@ function Home() {
     "Backend",
   ];
 
-  const handleToggleLike = (id: number) => {
-    setPosts((prev) =>
-      prev.map((post) =>
-        post.id === id
-          ? {
-              ...post,
-              likes: post.isLiked ? post.likes - 1 : post.likes + 1,
-              isLiked: !post.isLiked,
-            }
-          : post,
-      ),
-    );
-  };
-
-  const processedPosts = useMemo(() => {
-    const filtered = posts.filter((post) => {
-      const matchesCategory =
-        selectedCategory === "전체" ||
-        post.category.toLowerCase() === selectedCategory.toLowerCase();
-      const matchesSearch = post.title
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase());
-      const matchesLiked = showOnlyLiked ? post.isLiked : true;
-
-      return matchesCategory && matchesSearch && matchesLiked;
-    });
-
-    return [...filtered].sort((a, b) => {
-      if (sortBy === "latest") {
-        return new Date(b.date).getTime() - new Date(a.date).getTime();
-      }
-      return b.likes - a.likes;
-    });
-  }, [posts, searchTerm, selectedCategory, sortBy, showOnlyLiked]);
-
   return (
     <Container>
       <header className="home-header">
         <h1>기술 포스트</h1>
-        {isLoggedIn && user ? (
-          <p className="welcome-msg">
-            안녕하세요, {user.nickname}님! 오늘의 추천 글입니다.
-          </p>
-        ) : (
-          <p className="welcome-msg">로그인하고 더 많은 기능을 이용해보세요.</p>
-        )}
+        <p className="welcome-msg">
+          {isLoggedIn && user
+            ? `안녕하세요, ${user.nickname}님! 오늘의 추천 글입니다.`
+            : "로그인하고 더 많은 기능을 이용해보세요."}
+        </p>
       </header>
 
       <div className="home-stats">
         <div className="stat-badge">
-          전체 포스트 <strong>{posts.length}</strong>
+          전체 <strong>{allPostsCount}</strong>
         </div>
         <div className="stat-badge">
-          검색 결과 <strong>{processedPosts.length}</strong>
+          결과 <strong>{posts.length}</strong>
         </div>
       </div>
 
@@ -117,71 +68,67 @@ function Home() {
 
         <div className="control-row">
           <div className="search-bar">
-            <label htmlFor="search-input" className="visually-hidden">
-              포스트 검색
-            </label>
             <input
-              id="search-input"
+              id="search-bar"
               type="text"
-              placeholder="주제나 내용을 검색해보세요"
+              placeholder="검색어를 입력하세요"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="liked-filter">
-            <label htmlFor="liked-checkbox">
-              <input
-                id="liked-checkbox"
-                type="checkbox"
-                checked={showOnlyLiked}
-                onChange={(e) => setShowOnlyLiked(e.target.checked)}
-              />
-              <span className="filter-label">❤️ 내 좋아요 목록</span>
-            </label>
-          </div>
+          <div className="control-actions">
+            {isLoggedIn && (
+              <div className="liked-filter">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={showOnlyLiked}
+                    onChange={(e) => setShowOnlyLiked(e.target.checked)}
+                  />
+                  <span className="filter-label">❤️ 내 좋아요</span>
+                </label>
+              </div>
+            )}
 
-          <div className="sort-options">
+            <div className="sort-options">
+              {(["latest", "likes"] as const).map((type) => (
+                <button
+                  key={type}
+                  className={`sort-btn ${sortBy === type ? "active" : ""}`}
+                  onClick={() => setSortBy(type)}>
+                  {type === "latest" ? "최신순" : "인기순"}
+                </button>
+              ))}
+            </div>
+
             <button
-              className={`sort-btn ${sortBy === "latest" ? "active" : ""}`}
-              onClick={() => setSortBy("latest")}>
-              최신순
-            </button>
-            <button
-              className={`sort-btn ${sortBy === "likes" ? "active" : ""}`}
-              onClick={() => setSortBy("likes")}>
-              인기순
+              className={`write-btn ${!isLoggedIn ? "locked" : ""}`}
+              onClick={() =>
+                isLoggedIn
+                  ? navigate("/write")
+                  : toast.error("로그인이 필요합니다!")
+              }>
+              새 글 작성 ✍️
             </button>
           </div>
         </div>
       </section>
 
       <div className="posts-grid">
-        {processedPosts.length > 0 ? (
-          processedPosts.map((post) => (
+        {posts.length > 0 ? (
+          posts.map((post) => (
             <Card
               key={post.id}
               {...post}
-              isLiked={post.isLiked}
-              onLike={() => handleToggleLike(post.id)}
+              isLiked={post.likedBy?.includes(user?.nickname || "")}
+              onLike={() => actions.toggleLike(post.id)}
+              onDelete={() => actions.deletePost(post.id)}
+              isMine={isLoggedIn && user?.nickname === post.author}
             />
           ))
         ) : (
-          <div className="empty-state">
-            {showOnlyLiked && !searchTerm ? (
-              <div className="empty-message">
-                <span className="empty-icon">❤️</span>
-                <p>아직 좋아요를 누른 포스트가 없습니다.</p>
-                <p className="sub-text">관심 있는 글에 하트를 눌러보세요!</p>
-              </div>
-            ) : (
-              <div className="empty-message">
-                <span className="empty-icon">🔍</span>
-                <p>검색 결과가 없습니다.</p>
-                <p className="sub-text">다른 키워드로 검색해보세요.</p>
-              </div>
-            )}
-          </div>
+          <div className="empty-state">... 검색 결과 없음 ...</div>
         )}
       </div>
     </Container>

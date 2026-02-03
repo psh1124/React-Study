@@ -7,71 +7,107 @@
 .subtitle {
   color: #666;
   font-size: 1.1rem;
+  margin-top: 0.5rem;
 }
 
 .mypage-content h2 {
-  margin: 2rem 0 1rem;
+  margin: 3rem 0 1.5rem;
   font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
 }
 
 .info-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(15.625rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1.5rem;
 }
 
-.info-section .card {
-  padding: 0.75rem 1.25rem;
-  gap: 0.25rem;
+.info-card-wrapper {
+  background: #ffffff;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
 }
 
-.info-section .card .card__title {
-  font-size: 1.3rem;
-  color: #666;
-  font-weight: 500;
-  margin-bottom: 0;
+.info-card-wrapper:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
 }
 
-.info-section .card .card__content {
-  font-size: 1rem;
+.info-label {
+  font-size: 0.85rem;
   font-weight: 600;
-  color: #212529;
-  overflow: visible;
-  display: block;
-  -webkit-box-orient: initial;
-  -webkit-line-clamp: initial;
-  line-clamp: initial;
+  color: #94a3b8;
+  text-transform: uppercase;
+}
+
+.info-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
 }
 
 .activity-grid {
   display: flex;
   gap: 2rem;
-  background: #f0f4f8;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
+  background: #f8fafc;
+  padding: 1.5rem 2.5rem;
+  border-radius: 1rem;
+  border: 1px solid #f1f5f9;
 }
 
 .stat-item {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .stat-label {
   font-size: 0.9rem;
-  color: #555;
+  color: #64748b;
+  margin-bottom: 0.2rem;
 }
 
 .stat-value {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #007aff;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #3b82f6;
 }
 
-.Toastify__toast--warning {
-  background-color: #333 !important;
-  border-radius: 1rem !important;
-  box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.empty-message {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #94a3b8;
+  background: #fdfdfd;
+  border-radius: 1rem;
+  border: 1px dashed #cbd5e1;
+  font-size: 1rem;
+}
+
+.mypage-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.withdraw-confirm-container {
+  padding: 0.5rem;
 }
 
 .withdraw-confirm-text {
@@ -83,13 +119,13 @@
   white-space: pre-line;
 }
 
-.Toastify__toast-icon svg {
-  fill: #ffcc00;
-}
-
 .withdraw-confirm-buttons {
   display: flex;
   gap: 0.5rem;
   justify-content: flex-end;
-  margin-top: 0.5rem;
+}
+
+.Toastify__toast--warning {
+  background-color: #1e293b !important;
+  border-radius: 0.75rem !important;
 }
