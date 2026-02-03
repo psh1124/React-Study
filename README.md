@@ -19,7 +19,7 @@ React + TypeScript + Vite 기반의 **사용자 인증 흐름 학습 프로젝�
 ## 🛠 기술 스택
 
 ```bash
-React 18
+React 19
 TypeScript
 Vite
 React Router DOM
