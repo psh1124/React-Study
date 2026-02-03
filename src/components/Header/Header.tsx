@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, NavLink } from "react-router-dom";
 import "./Header.css";
-import { useAuth } from "../../context/useAuth";
+import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button/Button";
 import { mockLogout } from "../../mocks/auth";
 
@@ -37,7 +37,7 @@ function Header() {
           className={({ isActive }) =>
             isActive ? "nav-item active" : "nav-item"
           }>
-          홈
+          Home
         </NavLink>
 
         {isLoggedIn ? (
@@ -51,7 +51,7 @@ function Header() {
               onClick={handleLogout}
               className="nav-item logout-btn"
               style={{ padding: "0.4em 0.8em", minHeight: "2.2rem" }}>
-              로그아웃
+              Logout
             </Button>
           </>
         ) : (
@@ -61,14 +61,14 @@ function Header() {
               className={({ isActive }) =>
                 isActive ? "nav-item active" : "nav-item"
               }>
-              로그인
+              SignIn
             </NavLink>
             <NavLink
               to="/signup"
               className={({ isActive }) =>
                 isActive ? "nav-item active" : "nav-item"
               }>
-              회원가입
+              SignUp
             </NavLink>
           </>
         )}
