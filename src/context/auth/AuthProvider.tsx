@@ -1,21 +1,20 @@
 import { useState } from "react";
 import { AuthContext, type AuthContextType, type User } from "./AuthContext";
-import { STORAGE_KEYS } from "../constants/storage";
+import { storage, STORAGE_KEYS } from "../../constants/storage";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
-    return storedUser ? JSON.parse(storedUser) : null;
-  });
+  const [user, setUser] = useState<User | null>(() =>
+    storage.get<User | null>(STORAGE_KEYS.USER, null),
+  );
 
-  const login = (user: User) => {
-    setUser(user);
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+  const login = (userData: User) => {
+    setUser(userData);
+    storage.set(STORAGE_KEYS.USER, userData);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem(STORAGE_KEYS.USER);
+    storage.remove(STORAGE_KEYS.USER);
   };
 
   const value: AuthContextType = {
