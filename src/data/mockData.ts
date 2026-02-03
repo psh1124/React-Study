@@ -1,3 +1,5 @@
+import { storage, STORAGE_KEYS } from "../constants/storage";
+
 export interface Post {
   id: number;
   category: string;
@@ -7,7 +9,7 @@ export interface Post {
   date: string;
   likes: number;
   comments: number;
-  isLiked?: boolean;
+  likedBy: string[];
 }
 
 export const MOCK_POSTS: Post[] = [
@@ -21,7 +23,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.02.01",
     likes: 42,
     comments: 28,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 2,
@@ -33,7 +35,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.28",
     likes: 95,
     comments: 12,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 3,
@@ -45,7 +47,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.25",
     likes: 67,
     comments: 5,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 4,
@@ -57,7 +59,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.20",
     likes: 110,
     comments: 19,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 5,
@@ -69,7 +71,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.18",
     likes: 82,
     comments: 14,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 6,
@@ -81,7 +83,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.15",
     likes: 54,
     comments: 7,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 7,
@@ -93,7 +95,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.12",
     likes: 121,
     comments: 32,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 8,
@@ -105,7 +107,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.08",
     likes: 88,
     comments: 21,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 9,
@@ -117,7 +119,7 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.05",
     likes: 43,
     comments: 3,
-    isLiked: false,
+    likedBy: [],
   },
   {
     id: 10,
@@ -129,6 +131,14 @@ export const MOCK_POSTS: Post[] = [
     date: "2026.01.02",
     likes: 76,
     comments: 11,
-    isLiked: false,
+    likedBy: [],
   },
 ];
+
+export const getPosts = (): Post[] => {
+  return storage.get<Post[]>(STORAGE_KEYS.POSTS, MOCK_POSTS);
+};
+
+export const savePosts = (posts: Post[]) => {
+  storage.set(STORAGE_KEYS.POSTS, posts);
+};
