@@ -1,0 +1,118 @@
+.post-form-container {
+  max-width: 56.25rem;
+  margin: 1rem auto;
+  padding: 0 1.5rem;
+}
+
+.post-form-title {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin-bottom: 2.5rem;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.post-form select {
+  padding: 0.75rem 1rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.625rem;
+  width: fit-content;
+  min-width: 11.25rem;
+  background-color: #fff;
+  color: #1e293b;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.post-form input[type="text"] {
+  width: 100%;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e293b;
+  transition: all 0.2s ease;
+  outline: none;
+}
+.post-form textarea {
+  width: 100%;
+  min-height: 25rem;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.875rem;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  font-size: 1.15rem;
+  line-height: 1.9;
+  color: #334155;
+  font-family:
+    "Pretendard",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    sans-serif;
+  resize: vertical;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.post-form input[type="text"]:focus,
+.post-form textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.08);
+}
+
+.post-form input::placeholder,
+.post-form textarea::placeholder {
+  color: #cbd5e1;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  border-top: 0.0625rem solid #f1f5f9;
+}
+
+.btn {
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 0.625rem;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s;
+}
+
+.cancel-btn {
+  background-color: transparent;
+  color: #64748b;
+}
+
+.cancel-btn:hover {
+  background-color: #f1f5f9;
+}
+
+.submit-btn {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.submit-btn:hover {
+  background-color: #2563eb;
+}
