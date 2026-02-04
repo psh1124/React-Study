@@ -1,8 +1,7 @@
 import { useAuth } from "../../context/auth/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useMemo, useState } from "react";
-import { toast } from "react-toastify";
-import { AUTH_MESSAGES } from "../../constants/messages";
+import { notify } from "../../utils/toastService";
 import { mockWithdraw } from "../../mocks/auth";
 import { postService } from "../../services/postService";
 import Container from "../../components/Container/Container";
@@ -18,15 +17,14 @@ function MyPage() {
 
   const myPosts = useMemo(() => {
     if (!user) return [];
-    const allPosts = postService.getAll();
-    return allPosts.filter((post) => post.author === user.nickname);
+    return postService.getAll().filter((post) => post.author === user.nickname);
   }, [user]);
 
   const handleDeletePost = (postId: number) => {
     if (!window.confirm("정말 이 글을 삭제하시겠습니까?")) return;
 
     postService.delete(postId);
-    toast.success("글이 삭제되었습니다.");
+    notify.deleteSuccess();
     window.location.reload();
   };
 
@@ -36,36 +34,22 @@ function MyPage() {
 
     try {
       await mockWithdraw(user.id);
-      toast.dismiss("withdraw-confirm");
-      toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS);
+      notify.dismiss();
+      notify.withdrawSuccess();
       navigate("/", { replace: true });
       setTimeout(() => logout(), 100);
     } catch {
-      toast.error("탈퇴 처리 중 오류가 발생했습니다.");
+      notify.error("탈퇴 처리 중 오류가 발생했습니다.");
       setIsWithdrawing(false);
     }
   };
 
   const handleWithdrawClick = () => {
     if (!user) return;
-    toast.warn(
-      ({ closeToast }) => (
-        <div className="withdraw-confirm-container">
-          <p className="withdraw-confirm-text">
-            {AUTH_MESSAGES.WITHDRAW_CONFIRM}
-          </p>
-          <div className="withdraw-confirm-buttons">
-            <Button
-              variant="danger"
-              loading={isWithdrawing}
-              onClick={executeWithdraw}>
-              탈퇴
-            </Button>
-            <Button onClick={closeToast}>취소</Button>
-          </div>
-        </div>
-      ),
-      { toastId: "withdraw-confirm", position: "top-center", autoClose: false },
+    notify.withdrawConfirm(
+      executeWithdraw,
+      () => setIsWithdrawing(false),
+      isWithdrawing,
     );
   };
 
@@ -83,7 +67,6 @@ function MyPage() {
           <h2>기본 정보</h2>
           <div className="info-grid">
             <div className="info-card-wrapper">
-              {" "}
               <div className="info-label">닉네임</div>
               <div className="info-value">{user?.nickname || "정보 없음"}</div>
             </div>

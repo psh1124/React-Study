@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import Button from "../../../components/Button/Button";
 import PasswordField from "../../../components/PasswordField/PasswordField";
 import ErrorMessage from "../../../components/ErrorMessage/ErrorMessage";
@@ -13,10 +12,10 @@ import {
   validateSignupForm,
 } from "../../../hooks/useAuthValidation";
 import { mockCheckEmail, mockSignup } from "../../../mocks/auth";
-import { AUTH_MESSAGES } from "../../../constants/messages";
 import "../Auth.css";
 import AuthField from "../../../components/AuthField/AuthField";
 import LoadingOverlay from "../../../components/LoadingOverlay/LoadingOverlay";
+import { notify } from "../../../utils/toastService";
 
 function SignupForm() {
   const [isSignupLoading, setisSignupLoading] = useState(false);
@@ -38,6 +37,9 @@ function SignupForm() {
     agreeTerms: false,
   });
 
+  const [emailCheckMessage, setEmailCheckMessage] = useState("");
+  const isEmailDuplicated = emailCheckMessage.includes("이미");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -49,12 +51,9 @@ function SignupForm() {
   const handleBlur = (name: string) => {
     setTouched((prev) => ({ ...prev, [name]: true }));
   };
-  const [emailCheckMessage, setEmailCheckMessage] = useState("");
-  const isEmailDuplicated = emailCheckMessage.includes("이미");
 
   const handleEmailBlur = async () => {
     handleBlur("email");
-
     const email = formData.email;
     if (!email || getEmailError(email, true)) {
       setEmailCheckMessage("");
@@ -63,12 +62,7 @@ function SignupForm() {
 
     try {
       const isDuplicated = await mockCheckEmail(email);
-
-      if (isDuplicated) {
-        setEmailCheckMessage("이미 사용 중인 이메일입니다.");
-      } else {
-        setEmailCheckMessage("사용 가능한 이메일입니다.");
-      }
+      setEmailCheckMessage(isDuplicated ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.");
     } catch {
       setEmailCheckMessage("중복 확인 중 오류가 발생했습니다.");
     }
@@ -78,43 +72,32 @@ function SignupForm() {
     nickname: getNicknameError(formData.nickname, touched.nickname),
     email: getEmailError(formData.email, touched.email),
     password: getPasswordError(formData.password, touched.password),
-    passwordConfirm: getPasswordConfirmError(
-      formData.password,
-      formData.passwordConfirm,
-      touched.passwordConfirm,
-    ),
+    passwordConfirm: getPasswordConfirmError(formData.password, formData.passwordConfirm, touched.passwordConfirm),
     terms: getTermsError(formData.agreeTerms, touched.agreeTerms),
   };
 
-  const isFormValid =
-    validateSignupForm(
-      formData.nickname,
-      formData.email,
-      formData.password,
-      formData.passwordConfirm,
-      formData.agreeTerms,
-    ) && !isEmailDuplicated;
+  const isFormValid = validateSignupForm(
+    formData.nickname,
+    formData.email,
+    formData.password,
+    formData.passwordConfirm,
+    formData.agreeTerms,
+  ) && !isEmailDuplicated;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) {
-      toast.warn("입력 양식을 다시 확인해주세요.");
+      notify.validationFail();
       return;
     }
 
     setisSignupLoading(true);
     try {
-      const user = await mockSignup(
-        formData.email,
-        formData.password,
-        formData.nickname,
-      );
-      toast.success(`${user.nickname}님, ${AUTH_MESSAGES.SIGNUP_SUCCESS}`);
+      const user = await mockSignup(formData.email, formData.password, formData.nickname);
+      notify.signupSuccess(user.nickname);
       navigate("../login");
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : "회원가입에 실패했습니다.";
-      toast.error(errorMessage);
+      notify.error(error instanceof Error ? error.message : "회원가입에 실패했습니다.");
     } finally {
       setisSignupLoading(false);
     }
@@ -145,9 +128,7 @@ function SignupForm() {
           autoComplete="email"
           value={formData.email}
           error={errors.email || (isEmailDuplicated ? emailCheckMessage : null)}
-          successMessage={
-            !errors.email && !isEmailDuplicated ? emailCheckMessage : null
-          }
+          successMessage={!errors.email && !isEmailDuplicated ? emailCheckMessage : null}
           disabled={isSignupLoading}
           onChange={(e) => {
             handleChange(e);
@@ -197,10 +178,7 @@ function SignupForm() {
       </div>
 
       <div className="auth-form__actions">
-        <Button
-          type="submit"
-          loading={isSignupLoading}
-          disabled={!isFormValid || isSignupLoading}>
+        <Button type="submit" loading={isSignupLoading} disabled={!isFormValid || isSignupLoading}>
           회원가입
         </Button>
       </div>

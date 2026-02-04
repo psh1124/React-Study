@@ -1,7 +1,7 @@
 import { useAuth } from "../../context/auth/useAuth";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { usePosts } from "../../hooks/usePosts";
+import { notify } from "../../utils/toastService";
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
 import "./Home.css";
@@ -107,7 +107,7 @@ function Home() {
               onClick={() =>
                 isLoggedIn
                   ? navigate("/write")
-                  : toast.error("로그인이 필요합니다!")
+                  : notify.requireLogin()
               }>
               새 글 작성 ✍️
             </button>

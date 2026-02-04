@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/auth/useAuth";
 import "./Card.css";
-import { toast } from "react-toastify";
+import { notify } from "../../utils/toastService";
 import { memo } from "react";
 
 interface CardProps {
@@ -45,11 +45,7 @@ const Card = memo(function Card({
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isLoggedIn) {
-      toast.info("로그인이 필요한 서비스입니다.", {
-        icon: <span>🔒</span>,
-        toastId: "login-required",
-        onClick: () => navigate("/login"),
-      });
+      notify.requireLogin();
       return;
     }
     onLike?.();

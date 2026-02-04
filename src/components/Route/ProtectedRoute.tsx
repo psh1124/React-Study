@@ -1,8 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
 import { useAuth } from "../../context/auth/useAuth";
-import { AUTH_MESSAGES } from "../../constants/messages";
+import { notify } from "../../utils/toastService";
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const { isLoggedIn } = useAuth();
@@ -10,9 +9,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!isLoggedIn) {
-      toast.error(AUTH_MESSAGES.LOGIN_REQUIRED, {
-        toastId: "login-required",
-      });
+      notify.requireLogin(); 
       navigate("/login", { replace: true });
     }
   }, [isLoggedIn, navigate]);

@@ -6,12 +6,12 @@ import "../Auth.css";
 import { useEffect } from "react";
 
 function Signup() {
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, []);
+  // useEffect(() => {
+  //   document.body.style.overflow = "hidden";
+  //   return () => {
+  //     document.body.style.overflow = "auto";
+  //   };
+  // }, []);
   return (
     <div className="auth-page">
       <Container>

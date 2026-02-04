@@ -45,6 +45,7 @@ class PostService {
       likes: 0,
       comments: 0,
       likedBy: [],
+      createdAt: '',
     };
     this.saveAll([post, ...posts]);
     return post;

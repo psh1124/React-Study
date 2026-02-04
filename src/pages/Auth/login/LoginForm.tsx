@@ -1,7 +1,6 @@
 import { useAuth } from "../../../context/auth/useAuth";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
 import {
   getEmailError,
   getPasswordError,
@@ -13,6 +12,7 @@ import PasswordField from "../../../components/PasswordField/PasswordField";
 import AuthField from "../../../components/AuthField/AuthField";
 import LoadingOverlay from "../../../components/LoadingOverlay/LoadingOverlay";
 import "../Auth.css";
+import { notify } from "../../../utils/toastService";
 
 function LoginForm() {
   const { login } = useAuth();
@@ -43,14 +43,21 @@ function LoginForm() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!isFormValid) {
+      notify.validationFail();
+      return;
+    }
+
     setIsLoginLoading(true);
 
     try {
       const user = await mockLogin(formData.email, formData.password);
       login(user);
-      toast.success(`${user.nickname}님 반갑습니다! 😊`);
+      notify.loginSuccess(user.nickname);
     } catch (error) {
-      if (error instanceof Error) toast.error(error.message);
+      const message =
+        error instanceof Error ? error.message : "로그인에 실패했습니다.";
+      notify.error(message);
     } finally {
       setIsLoginLoading(false);
     }
