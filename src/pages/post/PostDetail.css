@@ -1,0 +1,83 @@
+.post-detail {
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.25rem 1.25rem rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.875rem;
+}
+
+.post-header {
+  margin-bottom: 1.5rem;
+}
+
+.post-meta {
+  display: flex;
+  gap: 0.75rem;
+  font-size: 0.875rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.post-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 1rem 0;
+  line-height: 1.3;
+  color: #1a1a1a;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.author-avatar {
+  width: 2rem;
+  height: 2rem;
+  background: #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #555;
+}
+
+.divider {
+  border: 0;
+  height: 0.0625rem;
+  background: #eee;
+  margin: 1.875rem 0;
+}
+
+.post-content {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #333;
+  min-height: 12.5rem;
+  white-space: pre-wrap;
+}
+
+.post-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2.5rem;
+}
+
+.owner-actions {
+  display: flex;
+  gap: 0.625rem;
+}
+
+.comments-section {
+  padding: 1.25rem;
+  background: #f9f9f9;
+  border-radius: 0.75rem;
+}
+
+.empty-comments {
+  text-align: center;
+  color: #999;
+  padding: 2.5rem 0;
+}
