@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Post } from "../../data/mockData";
 import "./PostForm.css";
 import { notify } from "../../utils/toastService";
 import { useNavigate } from "react-router-dom";
+import Button from "../Button/Button";
 
 interface PostFormProps {
   initialData?: Post;
@@ -12,14 +13,16 @@ interface PostFormProps {
     category: string;
   }) => void;
   isEdit?: boolean;
+  isLoading?: boolean;
 }
 
-const PostForm = ({ initialData, onSubmit, isEdit = false }: PostFormProps) => {
-  useEffect(() => {
-    return () => {
-      notify.dismiss();
-    };
-  }, []);
+const PostForm = ({
+  initialData,
+  onSubmit,
+  isEdit = false,
+  isLoading = false,
+}: PostFormProps) => {
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
@@ -31,8 +34,6 @@ const PostForm = ({ initialData, onSubmit, isEdit = false }: PostFormProps) => {
     e.preventDefault();
     onSubmit(formData);
   };
-
-  const navigate = useNavigate();
 
   const handleCancel = () => {
     notify.confirmCancel(() => {
@@ -88,15 +89,16 @@ const PostForm = ({ initialData, onSubmit, isEdit = false }: PostFormProps) => {
         </div>
 
         <div className="form-actions">
-          <button
+          <Button
             type="button"
-            className="btn cancel-btn"
-            onClick={handleCancel}>
+            variant="secondary"
+            onClick={handleCancel}
+            disabled={isLoading}>
             취소
-          </button>
-          <button type="submit" className="btn submit-btn">
+          </Button>
+          <Button type="submit" variant="primary" loading={isLoading}>
             {isEdit ? "수정 완료" : "출간하기"}
-          </button>
+          </Button>
         </div>
       </form>
     </div>
