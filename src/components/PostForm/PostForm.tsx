@@ -1,6 +1,8 @@
-import { useState } from "react";
-import type { Post } from "../../../data/mockData";
+import { useEffect, useState } from "react";
+import type { Post } from "../../data/mockData";
 import "./PostForm.css";
+import { notify } from "../../utils/toastService";
+import { useNavigate } from "react-router-dom";
 
 interface PostFormProps {
   initialData?: Post;
@@ -13,6 +15,12 @@ interface PostFormProps {
 }
 
 const PostForm = ({ initialData, onSubmit, isEdit = false }: PostFormProps) => {
+  useEffect(() => {
+    return () => {
+      notify.dismiss();
+    };
+  }, []);
+
   const [formData, setFormData] = useState({
     title: initialData?.title || "",
     content: initialData?.content || "",
@@ -24,10 +32,12 @@ const PostForm = ({ initialData, onSubmit, isEdit = false }: PostFormProps) => {
     onSubmit(formData);
   };
 
+  const navigate = useNavigate();
+
   const handleCancel = () => {
-    if (window.confirm("작성 중인 내용은 저장되지 않습니다. 나가시겠습니까?")) {
-      window.history.back();
-    }
+    notify.confirmCancel(() => {
+      navigate(-1);
+    });
   };
 
   return (
