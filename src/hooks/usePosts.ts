@@ -22,11 +22,11 @@ export function usePosts(
 
   const deletePost = useCallback(
     (id: number) => {
-      if (window.confirm("정말로 삭제하시겠습니까?")) {
+      notify.confirmDelete(() => {
         postService.delete(id);
         refresh();
         notify.deleteSuccess();
-      }
+      });
     },
     [refresh],
   );

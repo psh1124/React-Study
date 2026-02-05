@@ -42,6 +42,14 @@ const Card = memo(function Card({
   const { isLoggedIn } = useAuth();
   const navigate = useNavigate();
 
+  const handleMoveToDetail = () => {
+    if (onClick) {
+      onClick();
+    } else {
+      navigate(`/postdetail/${id}`);
+    }
+  };
+
   const handleLikeClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!isLoggedIn) {
@@ -71,44 +79,46 @@ const Card = memo(function Card({
 
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (window.confirm("정말 이 글을 삭제하시겠습니까?")) {
+    notify.confirmDelete(() => {
       onDelete?.();
-    }
+    });
   };
 
   return (
-    <div className="card" onClick={onClick}>
-      {isMine && (
-        <div className="card__admin-actions">
-          <button
-            className="card__edit-btn"
-            onClick={handleEditClick}
-            title="수정">
-            ✏️
-          </button>
-          <button
-            className="card__delete-btn"
-            onClick={handleDeleteClick}
-            title="삭제">
-            🗑️
-          </button>
-        </div>
-      )}
+    <div className="card">
+      <div className="card__clickable-area" onClick={handleMoveToDetail}>
+        {isMine && (
+          <div className="card__admin-actions">
+            <button
+              className="card__edit-btn"
+              onClick={handleEditClick}
+              title="수정">
+              ✏️
+            </button>
+            <button
+              className="card__delete-btn"
+              onClick={handleDeleteClick}
+              title="삭제">
+              🗑️
+            </button>
+          </div>
+        )}
 
-      <div className="card__header">
-        {category && <span className="card__category">{category}</span>}
-        <h2 className="card__title">{title}</h2>
+        <div className="card__header">
+          {category && <span className="card__category">{category}</span>}
+          <h2 className="card__title">{title}</h2>
+        </div>
+
+        <p className="card__content">{content}</p>
+
+        {author && (
+          <div className="card__info">
+            <span className="card__author">
+              by <strong>{author}</strong>
+            </span>
+          </div>
+        )}
       </div>
-
-      <p className="card__content">{content}</p>
-
-      {author && (
-        <div className="card__info">
-          <span className="card__author">
-            by <strong>{author}</strong>
-          </span>
-        </div>
-      )}
 
       {hasFooter && (
         <div className="card__footer">

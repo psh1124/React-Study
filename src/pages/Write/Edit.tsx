@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { postService } from "../../services/postService";
-import PostForm from "./components/PostForm";
+import PostForm from "../../components/PostForm/PostForm";
 import { notify } from "../../utils/toastService";
 
 const Edit = () => {
