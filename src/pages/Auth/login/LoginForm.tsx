@@ -5,7 +5,7 @@ import {
   getEmailError,
   getPasswordError,
   validateLoginForm,
-} from "../../../hooks/useAuthValidation";
+} from "../../../utils/authValidation";
 import { mockLogin } from "../../../mocks/auth";
 import Button from "../../../components/Button/Button";
 import PasswordField from "../../../components/PasswordField/PasswordField";
@@ -42,12 +42,6 @@ function LoginForm() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    if (!isFormValid) {
-      notify.validationFail();
-      return;
-    }
-
     setIsLoginLoading(true);
 
     try {

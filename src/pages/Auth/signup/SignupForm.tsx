@@ -10,7 +10,7 @@ import {
   getNicknameError,
   getTermsError,
   validateSignupForm,
-} from "../../../hooks/useAuthValidation";
+} from "../../../utils/authValidation";
 import { mockCheckEmail, mockSignup } from "../../../mocks/auth";
 import "../Auth.css";
 import AuthField from "../../../components/AuthField/AuthField";
@@ -62,7 +62,11 @@ function SignupForm() {
 
     try {
       const isDuplicated = await mockCheckEmail(email);
-      setEmailCheckMessage(isDuplicated ? "이미 사용 중인 이메일입니다." : "사용 가능한 이메일입니다.");
+      setEmailCheckMessage(
+        isDuplicated
+          ? "이미 사용 중인 이메일입니다."
+          : "사용 가능한 이메일입니다.",
+      );
     } catch {
       setEmailCheckMessage("중복 확인 중 오류가 발생했습니다.");
     }
@@ -72,32 +76,38 @@ function SignupForm() {
     nickname: getNicknameError(formData.nickname, touched.nickname),
     email: getEmailError(formData.email, touched.email),
     password: getPasswordError(formData.password, touched.password),
-    passwordConfirm: getPasswordConfirmError(formData.password, formData.passwordConfirm, touched.passwordConfirm),
+    passwordConfirm: getPasswordConfirmError(
+      formData.password,
+      formData.passwordConfirm,
+      touched.passwordConfirm,
+    ),
     terms: getTermsError(formData.agreeTerms, touched.agreeTerms),
   };
 
-  const isFormValid = validateSignupForm(
-    formData.nickname,
-    formData.email,
-    formData.password,
-    formData.passwordConfirm,
-    formData.agreeTerms,
-  ) && !isEmailDuplicated;
+  const isFormValid =
+    validateSignupForm(
+      formData.nickname,
+      formData.email,
+      formData.password,
+      formData.passwordConfirm,
+      formData.agreeTerms,
+    ) && !isEmailDuplicated;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isFormValid) {
-      notify.validationFail();
-      return;
-    }
-
     setisSignupLoading(true);
     try {
-      const user = await mockSignup(formData.email, formData.password, formData.nickname);
+      const user = await mockSignup(
+        formData.email,
+        formData.password,
+        formData.nickname,
+      );
       notify.signupSuccess(user.nickname);
       navigate("../login");
     } catch (error) {
-      notify.error(error instanceof Error ? error.message : "회원가입에 실패했습니다.");
+      notify.error(
+        error instanceof Error ? error.message : "회원가입에 실패했습니다.",
+      );
     } finally {
       setisSignupLoading(false);
     }
@@ -128,7 +138,9 @@ function SignupForm() {
           autoComplete="email"
           value={formData.email}
           error={errors.email || (isEmailDuplicated ? emailCheckMessage : null)}
-          successMessage={!errors.email && !isEmailDuplicated ? emailCheckMessage : null}
+          successMessage={
+            !errors.email && !isEmailDuplicated ? emailCheckMessage : null
+          }
           disabled={isSignupLoading}
           onChange={(e) => {
             handleChange(e);
@@ -178,7 +190,10 @@ function SignupForm() {
       </div>
 
       <div className="auth-form__actions">
-        <Button type="submit" loading={isSignupLoading} disabled={!isFormValid || isSignupLoading}>
+        <Button
+          type="submit"
+          loading={isSignupLoading}
+          disabled={!isFormValid || isSignupLoading}>
           회원가입
         </Button>
       </div>

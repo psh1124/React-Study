@@ -21,11 +21,12 @@ function MyPage() {
   }, [user]);
 
   const handleDeletePost = (postId: number) => {
-    if (!window.confirm("정말 이 글을 삭제하시겠습니까?")) return;
+    notify.confirmDelete(() => {
+      postService.delete(postId);
+      notify.deleteSuccess();
 
-    postService.delete(postId);
-    notify.deleteSuccess();
-    window.location.reload();
+      window.location.reload();
+    });
   };
 
   const executeWithdraw = async () => {

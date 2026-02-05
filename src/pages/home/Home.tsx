@@ -82,6 +82,7 @@ function Home() {
               <div className="liked-filter">
                 <label>
                   <input
+                    id="liked-filter"
                     type="checkbox"
                     checked={showOnlyLiked}
                     onChange={(e) => setShowOnlyLiked(e.target.checked)}
@@ -105,9 +106,7 @@ function Home() {
             <button
               className={`write-btn ${!isLoggedIn ? "locked" : ""}`}
               onClick={() =>
-                isLoggedIn
-                  ? navigate("/write")
-                  : notify.requireLogin()
+                isLoggedIn ? navigate("/write") : notify.requireLogin()
               }>
               새 글 작성 ✍️
             </button>
