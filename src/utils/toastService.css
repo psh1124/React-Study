@@ -1,0 +1,82 @@
+/* 컨테이너 및 텍스트 */
+.custom-confirm,
+.withdraw-confirm-container {
+  padding: 0.5rem 0.2rem;
+  width: 100%;
+}
+
+.custom-confirm p,
+.withdraw-confirm-text {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #ffffff !important;
+  font-weight: 700;
+  word-break: keep-all;
+}
+
+.confirm-buttons-group,
+.withdraw-confirm-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.confirm-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.confirm-btn.delete {
+  background-color: #ff4d4f;
+  color: white;
+}
+.confirm-btn.cancel {
+  background-color: #e9ecef;
+  color: #495057;
+}
+.confirm-btn.info {
+  background-color: #3498db;
+  color: white;
+}
+
+.confirm-btn:hover {
+  filter: brightness(0.9);
+  transform: translateY(-1px);
+}
+
+/* 흔들기 애니메이션 */
+@keyframes shake-animation-effect {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+  75% {
+    transform: translateX(-6px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.shake-animation {
+  animation: shake-animation-effect 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97)
+    both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+.Toastify__toast-body {
+  align-items: flex-start;
+}

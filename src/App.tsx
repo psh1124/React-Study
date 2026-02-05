@@ -1,7 +1,7 @@
 // 1. React & 라이브러리 (핵심 도구들)
 import { useEffect } from "react";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { ToastContainer, Slide } from "react-toastify";
+import { ToastContainer, Slide, toast } from "react-toastify";
 import nprogress from "nprogress";
 
 // 2. Context & Providers (전역 상태 관리)
@@ -21,6 +21,7 @@ import Signup from "./pages/Auth/signup/Signup";
 import MyPage from "./pages/mypage/MyPage";
 import Write from "./pages/Write/Write";
 import Edit from "./pages/Write/Edit";
+import PostDetail from "./pages/post/PostDetail";
 
 // 5. 스타일 및 CSS (디자인)
 import "react-toastify/dist/ReactToastify.css";
@@ -33,6 +34,16 @@ function NavigationWatcher() {
   const location = useLocation();
 
   useEffect(() => {
+    const toxicToasts = [
+      "withdraw-confirm",
+      "confirm-cancel",
+      "confirm-delete",
+      "login-required",
+      "valid-fail",
+      "server-err",
+    ];
+
+    toxicToasts.forEach((id) => toast.dismiss(id));
     nprogress.start();
 
     const timer = setTimeout(() => {
@@ -50,6 +61,7 @@ function NavigationWatcher() {
 
 function App() {
   const basename = import.meta.env.MODE === "production" ? "/React-Study" : "";
+
   return (
     <ErrorBoundary>
       <AuthProvider>
@@ -100,6 +112,14 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Edit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/postdetail/:id"
+                element={
+                  <ProtectedRoute>
+                    <PostDetail />
                   </ProtectedRoute>
                 }
               />
