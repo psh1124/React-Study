@@ -39,8 +39,6 @@ function NavigationWatcher() {
       "confirm-cancel",
       "confirm-delete",
       "login-required",
-      "valid-fail",
-      "server-err",
     ];
 
     toxicToasts.forEach((id) => toast.dismiss(id));

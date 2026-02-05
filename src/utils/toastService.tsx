@@ -32,19 +32,24 @@ export const notify = {
   saveSuccess: (isEdit: boolean) =>
     toast.success(
       isEdit ? "✅ 수정이 완료되었습니다!" : "🚀 새 글이 등록되었습니다!",
-      { icon: false },
+      { toastId: "save-success-id", icon: false },
     ),
 
   deleteSuccess: () =>
-    toast.success("🗑️ 게시글이 삭제되었습니다.", { icon: false }),
+    toast.success("🗑️ 게시글이 삭제되었습니다.", {
+      toastId: "delete-success-id",
+      icon: false,
+    }),
 
   withdrawSuccess: () =>
     toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS, { icon: false }),
 
-  // 사용자확인알림
+  // 사용자확인 알림
   confirmDelete: (onConfirm: () => void) => {
     const TOAST_ID = "confirm-delete";
-    if (shakeExistingToast(TOAST_ID)) return;
+
+    // if (shakeExistingToast(TOAST_ID)) return;
+    toast.dismiss(TOAST_ID);
 
     toast.warn(
       ({ closeToast }) => (
