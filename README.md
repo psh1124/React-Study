@@ -1,129 +1,85 @@
-# React-Study
+# 🚀 React-Study
 
-React + TypeScript + Vite 기반의 **사용자 인증 흐름 학습 프로젝트**입니다.  
-폼 유효성 검증부터 **Mock 기반 로그인/회원가입**,  
-**Context API + localStorage를 활용한 전역 로그인 상태 관리**까지 구현했습니다.
+> **React + TypeScript + Vite 기반의 사용자 인증 및 게시판 시스템 학습 프로젝트** > Context API와 LocalStorage를 활용하여 실제 서버 없이도 완벽한 인증 아키텍처와 데이터 영속성을 구현합니다.
 
 ---
 
-## 📌 프로젝트 목적
+## 📌 프로젝트 개요
 
-- React + TypeScript 기반 인증 흐름 구조 이해
-- Context API를 활용한 전역 로그인 상태 관리
-- Mock API를 통한 로그인 / 회원가입 시뮬레이션
-- 새로고침 이후에도 유지되는 로그인 상태 구현
-- 컴포넌트 역할 분리 및 파일 구조 정리
+단순히 기능을 만드는 것을 넘어, **관심사 분리(SoC)**를 통한 확장 가능한 폴더 구조와 유지보수가 용이한 React 개발 패턴을 학습하기 위해 설계되었습니다.
+
+### 🎯 학습 포인트
+- **인증 아키텍처**: 회원가입 → 로그인 → 마이페이지 → 회원탈퇴의 End-to-End 흐름.
+- **상태 관리**: Context API를 활용한 전역 세션 및 로딩 상태 관리.
+- **데이터 영속성**: `localStorage`를 활용한 데이터 지속성 확보.
+- **라우트 가드**: `PublicRoute`, `ProtectedRoute` 기반의 페이지 접근 제어.
 
 ---
 
 ## 🛠 기술 스택
 
-```bash
-React 19
-TypeScript
-Vite
-React Router DOM
-Context API
-localStorage
-CSS
-```
+### Core
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![TypeScript](https://img.shields.io/badge/typescript-%23007acc.svg?style=for-the-badge&logo=typescript&logoColor=white) ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+
+### Ecosystem
+- **Routing**: `React Router v7`
+- **Feedback**: `React-Toastify`, `React-Icons`
+- **Styling**: `Pure CSS` (반응형 설계)
+
+---
 
 ## 🔥 주요 기능
 
-### 1. 회원가입 (Mock)
-- 이메일 / 비밀번호 / 닉네임 입력
-- 이메일 형식 검증
-- 비밀번호 최소 길이 검증
-- 비밀번호 확인 일치 여부 검증
-- 약관 동의 필수 체크
-- localStorage(mock_users)에 사용자 저장
+### 1. 인증 시스템 (Authentication)
+- **유효성 검증**: Touched 패턴을 활용한 실시간 이메일/비밀번호 검증.
+- **비밀번호 토글**: `usePasswordToggle` 훅으로 가시성 제어.
+- **세션 유지**: 서비스 접속 시 스토리지 기반 자동 로그인 수행.
 
-### 2. 로그인 (Mock)
-- 이메일 / 비밀번호 입력
-- 입력값 유효성 검증
-- mock_users에서 계정 확인
-- 로그인 성공 시 Context 상태 업데이트
-- localStorage에 로그인 사용자 저장
-
-### 3. 전역 로그인 상태 관리
-- AuthContext / AuthProvider 구조
-- isLoggedIn, user, login, logout 전역 공유
-- useAuth 커스텀 훅 제공
-
-### 4. 로그인 유지 기능
-- 웹 시작할때 localStorage user 값 복원
-- 새로고침, 페이지 이동 시에도 로그인 상태 유지
-
-### 5. 헤더 UI분기
-- 로그인 상태
-  - 닉네임 표시
-  - 로그아웃
-  - 회원탈퇴
-- 비로그인 상태
-  - 로그인 / 회원가입 메뉴 노출
+### 2. 게시판 시스템 (Content Management)
+- **CRUD 로직**: `postService` 클래스로 분리된 게시글 처리 인프라.
+- **필터링 & 검색**: 카테고리별 필터 및 제목 검색 (`useMemo` 최적화).
+- **좋아요**: 포스트별 독립적 좋아요 상태 및 카운트 관리.
 
 ---
 
-## 🔐 로그인 처리 흐름
-
-```bash
-LoginForm
-  ↓
-handleLogin()
-  ↓
-mockLogin(email, password)
-  ↓
-localStorage(mock_users) 조회
-  ↓
-성공 → { id, email, nickname }
-  ↓
-login(user)
-  ↓
-AuthContext 상태 업데이트
-  ↓
-Header / Home 에서 로그인 상태 반영
-```
-
----
-
-## 인증 구조 요약
-
-```bash
-mock_users      : 가입된 사용자 목록
-mockLogin       : 로그인 인증 Mock 함수
-mockSignup      : 회원가입 Mock 함수
-mockWithdraw    : 회원탈퇴 Mock 함수
-AuthContext     : 전역 인증 상태 정의
-AuthProvider    : 상태 + localStorage 동기화
-useAuth         : Context 접근용 훅
-```
-
----
-
-## 🗂 폴더 구조
+## 🗂 프로젝트 구조 (System Architecture)
 
 ```bash
 src/
-├─ components/
-│ ├─ Header/
-│ ├─ InputField/
-│ └─ Button/
-├─ context/
-│ ├─ AuthContext.tsx
-│ ├─ AuthProvider.tsx
-│ └─ useAuth.ts
-├─ hooks/
-│ └─ useAuthValidation.ts
-├─ mocks/
-│ ├─ auth.ts
-│ └─ users.ts
-├─ pages/
-│ ├─ home/
-│ ├─ login/
-│ └─ signup/
-├─ App.tsx
-└─ main.tsx
+├── components/          # 재사용 가능한 UI 원자 컴포넌트
+├── context/             # 전역 상태 관리 (Auth, Loading)
+├── hooks/               # 비즈니스 로직 캡슐화 (Validation, Posts, Likes)
+├── services/            # 데이터 접근 계층 (Storage CRUD 로직을 분리하여 외부 의존성 최소화)
+├── mocks/               # API Mocking (서버 없이도 비동기 인증 흐름을 독립적으로 테스트)
+├── constants/           # 매직 넘버 및 메시지 관리
+├── pages/               # 라우트 단위 페이지 컴포넌트
+└── utils/               # 독립적인 헬퍼 함수
 ```
+
+---
+
+## 🔐 데이터 흐름 (Auth Flow)
+1. **[입력]** `LoginForm` 데이터 입력 및 실시간 유효성 검증
+2. **[요청]** `mockLogin` 비동기 호출 (Promise 기반 시뮬레이션)
+3. **[처리]** `localStorage` 데이터 대조 후 유저 객체 반환
+4. **[동기화]** `AuthContext` 상태 업데이트 및 세션 저장
+5. **[가드]** `ProtectedRoute`가 로그인 상태를 감지하여 페이지 접근 허용
+
+---
+
+## 🎯 기술적 결정
+
+- **Mock 인증 사용이유?**
+  
+  실제 백엔드가 구축되기 전에도 프론트엔드 개발자가 **독립적으로 전체 인증 흐름(가입-로그인-탈퇴)을 테스트**하고, 아키텍처를 설계하는 경험을 하기 위해 도입했습니다.
+  
+- **왜 Service 레이어를 별도로 두었는지?**
+  
+  UI 컴포넌트가 데이터 저장 방식(LocalStorage인지 실제 DB인지)에 의존하지 않게 하기 위해서입니다. 이를 통해 **인프라 교체에 유연한 코드**를 작성하고자 했습니다.
+  
+- **왜 Context API를 선택했는지?**
+  
+  로그인 정보는 앱 전체에서 광범위하게 쓰이지만 변경 빈도가 낮습니다. 따라서 외부 라이브러리(Redux 등) 없이 React 내장 기능만으로 **가볍고 효율적으로 상태를 전파**하기 위해 선택했습니다.
 
 ---
 
@@ -134,50 +90,14 @@ git clone https://github.com/psh1124/React-Study.git
 cd React-Study
 npm install
 npm run dev
+
 ```
 
 ---
 
-## Mock 인증 사용한 이유
+## 📌 향후 작업 계획 (TODO)
 
-- 실제 API 없이 인증 흐름 학습
-- 상태 관리 및 구조 설계에 집중
-- 추후 실제 API 연동 시 교체 용이
-
----
-
-## 🛠️ 사용된 주요 라이브러리
-
-| 라이브러리 | 용도 |
-|------------|------|
-| `react` | UI 렌더링 |
-| `react-dom` | DOM 렌더링 |
-| `react-router-dom` | 페이지 라우팅 (BrowserRouter, Routes, Route 등) |
-| `typescript` | 타입 안정성 추가 |
-| `vite` | 개발 서버 및 빌드 도구 |
-| `@types/react` | React 타입 정의 |
-| `@types/react-dom` | React DOM 타입 정의 |
-| `@types/react-router-dom` | React Router 타입 정의 |
-| `react-icons` | 아이콘 사용 (eye, warning 등) |
-
----
-
-## 📌 앞으로 할 작업
-
-이 프로젝트의 TODO 및 향후 작업 계획은 GitHub Projects에서 관리하고 있습니다.  
+이 프로젝트의 TODO 및 향후 작업 계획은 GitHub Projects에서 관리하고 있습니다.
 아래 링크에서 현재 진행 중인 이슈와 계획을 확인할 수 있습니다.
 
 - GitHub Projects: https://github.com/psh1124/React-Study/projects
-
----
-
-## 🎯 참고
-
-현재 리포지토리는 **학습용 프로젝트**입니다.  
-폴더 명명, 컴포넌트 설계, 라우팅 구조 등을 스스로 계획하고 구현하면서 React 개발의 기본 패턴을 연습하기에 적합합니다.
-
----
-
-## 📄 라이선스
-
-MIT License (필요 시 적용)
