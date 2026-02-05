@@ -2,6 +2,8 @@ import { useState, useMemo, useCallback } from "react";
 import { postService } from "../services/postService";
 import { type Post } from "../data/mockData";
 import { notify } from "../utils/toastService";
+import { useLoading } from "../context/loading/useLoading";
+
 interface AuthUser {
   nickname?: string;
 }
@@ -16,20 +18,35 @@ export function usePosts(
   const [sortBy, setSortBy] = useState<"latest" | "likes">("latest");
   const [showOnlyLiked, setShowOnlyLiked] = useState(false);
 
+  const { showLoading, hideLoading } = useLoading();
+
   const refresh = useCallback(() => {
     setPosts(postService.getAll());
   }, []);
 
-  const deletePost = useCallback(
-    (id: number) => {
-      notify.confirmDelete(() => {
-        postService.delete(id);
-        refresh();
-        notify.deleteSuccess();
-      });
-    },
-    [refresh],
-  );
+  const deletePost = async (postId: number) => {
+    showLoading();
+
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const storedPosts: Post[] = JSON.parse(
+        localStorage.getItem("posts") || "[]",
+      );
+      const updatedPosts = storedPosts.filter(
+        (post: Post) => post.id !== postId,
+      );
+
+      localStorage.setItem("posts", JSON.stringify(updatedPosts));
+      setPosts(updatedPosts);
+
+      notify.deleteSuccess();
+    } catch {
+      notify.error("삭제 중 오류가 발생했습니다.");
+    } finally {
+      hideLoading();
+    }
+  };
 
   const toggleLike = useCallback(
     (id: number) => {

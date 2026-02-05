@@ -78,9 +78,13 @@ const Card = memo(function Card({
   };
 
   const handleDeleteClick = (e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
+
     notify.confirmDelete(() => {
-      onDelete?.();
+      if (onDelete) {
+        onDelete();
+      }
     });
   };
 

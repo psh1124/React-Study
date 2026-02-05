@@ -121,9 +121,12 @@ function Home() {
               key={post.id}
               {...post}
               isLiked={post.likedBy?.includes(user?.nickname || "")}
-              onLike={() => actions.toggleLike(post.id)}
-              onDelete={() => actions.deletePost(post.id)}
               isMine={isLoggedIn && user?.nickname === post.author}
+              onLike={() => actions.toggleLike(post.id)}
+              onDelete={() => {
+                console.log("4. Home에서 actions.deletePost 호출!");
+                actions.deletePost(post.id);
+              }}
             />
           ))
         ) : (
