@@ -9,9 +9,12 @@ export function LoadingProvider({ children }: { children: ReactNode }) {
   const setLoading = (loading: boolean) => {
     setIsLoading(loading);
   };
+  const showLoading = () => setIsLoading(true);
+  const hideLoading = () => setIsLoading(false);
 
   return (
-    <LoadingContext.Provider value={{ isLoading, setLoading }}>
+    <LoadingContext.Provider
+      value={{ isLoading, setLoading, showLoading, hideLoading }}>
       {children}
       {isLoading && <LoadingOverlay />}
     </LoadingContext.Provider>
