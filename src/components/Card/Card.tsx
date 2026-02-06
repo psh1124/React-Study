@@ -16,6 +16,7 @@ interface CardProps {
   isLiked?: boolean;
   showComments?: boolean;
   isMine?: boolean;
+  views?: number;
   onLike?: () => void;
   onClick?: () => void;
   onDelete?: () => void;
@@ -32,8 +33,8 @@ const Card = memo(function Card({
   likes,
   comments,
   isLiked,
-  showComments = true,
   isMine = false,
+  views,
   onLike,
   onClick,
   onDelete,
@@ -59,17 +60,8 @@ const Card = memo(function Card({
     onLike?.();
   };
 
-  const handleOverlayClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    navigate("/login");
-  };
-
-  const hasFooter = likes !== undefined || comments !== undefined || date;
-  const textareaId = `comment-${id}`;
-
   const handleEditClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-
     if (onEdit) {
       onEdit();
     } else {
@@ -80,13 +72,12 @@ const Card = memo(function Card({
   const handleDeleteClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-
     notify.confirmDelete(() => {
-      if (onDelete) {
-        onDelete();
-      }
+      if (onDelete) onDelete();
     });
   };
+
+  const hasFooter = likes !== undefined || comments !== undefined || date;
 
   return (
     <div className="card">
@@ -110,13 +101,19 @@ const Card = memo(function Card({
 
         <div className="card__header">
           {category && <span className="card__category">{category}</span>}
-          <h2 className="card__title">{title}</h2>
+          <h2 className="card__title" style={{ marginBottom: "4px" }}>
+            {title}
+          </h2>
         </div>
 
-        <p className="card__content">{content}</p>
+        <p
+          className="card__content"
+          style={{ marginTop: "0", marginBottom: "16px" }}>
+          {content}
+        </p>
 
         {author && (
-          <div className="card__info">
+          <div className="card__info" style={{ marginTop: "auto" }}>
             <span className="card__author">
               by <strong>{author}</strong>
             </span>
@@ -134,29 +131,10 @@ const Card = memo(function Card({
                 {isLiked ? "❤️" : "🤍"} {likes}
               </button>
               <span className="stat-item">💬 {comments || 0}</span>
+              <span className="stat-item">👀 {views || 0}</span>
             </div>
             {date && <span className="card__date">{date}</span>}
           </div>
-        </div>
-      )}
-
-      {showComments && (
-        <div className="comment-section" onClick={(e) => e.stopPropagation()}>
-          {isLoggedIn ? (
-            <div className="comment-input-wrapper">
-              <textarea
-                id={textareaId}
-                className="comment-input-area"
-                placeholder="댓글을 남겨보세요..."
-              />
-            </div>
-          ) : (
-            <div className="login-prompt-bar" onClick={handleOverlayClick}>
-              <span>
-                💬 댓글을 쓰려면 <strong>로그인</strong>이 필요합니다.
-              </span>
-            </div>
-          )}
         </div>
       )}
     </div>
