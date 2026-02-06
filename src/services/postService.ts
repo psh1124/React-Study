@@ -1,4 +1,5 @@
 import { type Post, MOCK_POSTS } from "../data/mockData";
+import { commentService } from "./commentService";
 
 const STORAGE_KEY = "posts";
 
@@ -45,7 +46,7 @@ class PostService {
       likes: 0,
       comments: 0,
       likedBy: [],
-      createdAt: '',
+      views: 0,
     };
     this.saveAll([post, ...posts]);
     return post;
@@ -87,6 +88,26 @@ class PostService {
       posts[index] = { ...post };
       this.saveAll(posts);
     }
+  }
+
+  incrementViews(id: number): void {
+    const posts = this.getAll();
+    const updatedPosts = posts.map((post) =>
+      post.id === id ? { ...post, views: post.views + 1 } : post,
+    );
+    this.saveAll(updatedPosts);
+  }
+
+  getPostsWithCommentCount(): Post[] {
+    const posts = this.getAll();
+
+    return posts.map((post) => {
+      const realComments = commentService.getByPostId(post.id);
+      return {
+        ...post,
+        comments: realComments.length,
+      };
+    });
   }
 }
 
