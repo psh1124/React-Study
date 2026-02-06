@@ -113,14 +113,7 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path="/postdetail/:id"
-                element={
-                  <ProtectedRoute>
-                    <PostDetail />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/postdetail/:id" element={<PostDetail />} />
             </Routes>
 
             <ToastContainer

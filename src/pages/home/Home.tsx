@@ -1,14 +1,36 @@
 import { useAuth } from "../../context/auth/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { usePosts } from "../../hooks/usePosts";
 import { notify } from "../../utils/toastService";
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
 import "./Home.css";
+import { useEffect } from "react";
+
+interface LocationState {
+  toastMessage?: string;
+}
 
 function Home() {
   const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // state 타입 단언
+  const state = location.state as LocationState;
+
+  useEffect(() => {
+    if (state?.toastMessage) {
+      // NavigationWatcher의 dismiss 로직을 피하기 위해 400ms 지연
+      const timer = setTimeout(() => {
+        notify.error(state.toastMessage as string);
+        // 메시지 출력 후 state를 초기화하여 중복 알림 방지
+        navigate(location.pathname, { replace: true, state: {} });
+      }, 400);
+
+      return () => clearTimeout(timer);
+    }
+  }, [state?.toastMessage, navigate, location.pathname]);
 
   const {
     posts,
@@ -93,14 +115,22 @@ function Home() {
             )}
 
             <div className="sort-options">
-              {(["latest", "likes"] as const).map((type) => (
-                <button
-                  key={type}
-                  className={`sort-btn ${sortBy === type ? "active" : ""}`}
-                  onClick={() => setSortBy(type)}>
-                  {type === "latest" ? "최신순" : "인기순"}
-                </button>
-              ))}
+              {(["latest", "likes", "views"] as const).map((type) => {
+                const label = {
+                  latest: "최신순",
+                  likes: "인기순",
+                  views: "조회순",
+                }[type];
+
+                return (
+                  <button
+                    key={type}
+                    className={`sort-btn ${sortBy === type ? "active" : ""}`}
+                    onClick={() => setSortBy(type)}>
+                    {label}
+                  </button>
+                );
+              })}
             </div>
 
             <button
@@ -123,10 +153,7 @@ function Home() {
               isLiked={post.likedBy?.includes(user?.nickname || "")}
               isMine={isLoggedIn && user?.nickname === post.author}
               onLike={() => actions.toggleLike(post.id)}
-              onDelete={() => {
-                console.log("4. Home에서 actions.deletePost 호출!");
-                actions.deletePost(post.id);
-              }}
+              onDelete={() => actions.deletePost(post.id)}
             />
           ))
         ) : (
