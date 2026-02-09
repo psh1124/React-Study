@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { notify } from "../../utils/toastService";
 import { mockWithdraw } from "../../mocks/auth";
 import { postService } from "../../services/postService";
+import { commentService } from "../../services/commentService";
 import Container from "../../components/Container/Container";
 import Card from "../../components/Card/Card";
 import Button from "../../components/Button/Button";
@@ -20,25 +21,48 @@ function MyPage() {
     return postService.getAll().filter((post) => post.author === user.nickname);
   }, [user]);
 
+  const [deletedPostIds, setDeletedPostIds] = useState<number[]>([]);
+
+  const [prevUserId, setPrevUserId] = useState(user?.id);
+  if (user?.id !== prevUserId) {
+    setPrevUserId(user?.id);
+    setDeletedPostIds([]);
+  }
+
+  const displayPosts = useMemo(() => {
+    return myPosts.filter((post) => !deletedPostIds.includes(post.id));
+  }, [myPosts, deletedPostIds]);
+
+  const myCommentsCount = useMemo(() => {
+    if (!user) return 0;
+    return commentService.getAll().filter((c) => c.author === user.nickname)
+      .length;
+  }, [user]);
+
   const handleDeletePost = (postId: number) => {
     notify.confirmDelete(() => {
       postService.delete(postId);
+      setDeletedPostIds((prev) => [...prev, postId]);
       notify.deleteSuccess();
-
-      window.location.reload();
     });
   };
 
   const executeWithdraw = async () => {
-    if (!user) return;
+    if (!user || !user.nickname) return;
+
     setIsWithdrawing(true);
 
     try {
+      postService.deleteAllByAuthor(user.nickname);
+      commentService.deleteAllByAuthor(user.nickname);
+
       await mockWithdraw(user.id);
+
       notify.dismiss();
       notify.withdrawSuccess();
+
+      logout();
       navigate("/", { replace: true });
-      setTimeout(() => logout(), 100);
     } catch {
       notify.error("탈퇴 처리 중 오류가 발생했습니다.");
       setIsWithdrawing(false);
@@ -81,13 +105,13 @@ function MyPage() {
         <section className="activity-section">
           <h2>활동 통계</h2>
           <div className="activity-grid">
-            <div className="stat-item">
+            <div className="mypage__stat-item">
               <span className="stat-label">작성한 글</span>
-              <span className="stat-value">{myPosts.length}</span>
+              <span className="stat-value">{displayPosts.length}</span>
             </div>
-            <div className="stat-item">
+            <div className="mypage__stat-item">
               <span className="stat-label">작성한 댓글</span>
-              <span className="stat-value">0</span>
+              <span className="stat-value">{myCommentsCount}</span>
             </div>
           </div>
         </section>
@@ -95,12 +119,11 @@ function MyPage() {
         <section className="my-posts-section">
           <h2>내가 작성한 글</h2>
           <div className="posts-grid">
-            {myPosts.length > 0 ? (
-              myPosts.map((post) => (
+            {displayPosts.length > 0 ? (
+              displayPosts.map((post) => (
                 <Card
                   key={post.id}
                   {...post}
-                  showComments={false}
                   isMine={true}
                   onDelete={() => handleDeletePost(post.id)}
                   onEdit={() => navigate(`/edit/${post.id}`)}

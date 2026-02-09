@@ -67,9 +67,7 @@ function PostDetail() {
 
   const handleCommentSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!commentInput.trim()) return;
-
     if (!user || !user.nickname) {
       notify.requireLogin();
       return;
@@ -83,6 +81,14 @@ function PostDetail() {
     setComments((prev) => [newComment, ...prev]);
     setCommentInput("");
     notify.success("댓글이 등록되었습니다.");
+  };
+
+  const handleCommentDelete = (commentId: number) => {
+    notify.confirmDelete(() => {
+      commentService.delete(commentId);
+      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      notify.success("댓글이 삭제되었습니다.");
+    });
   };
 
   const isMine = user?.nickname === post.author;
@@ -138,6 +144,7 @@ function PostDetail() {
               onSubmit={handleCommentSubmit}
               style={{ display: "flex", gap: "10px" }}>
               <input
+                id="commentInput"
                 type="text"
                 placeholder="댓글을 입력하세요..."
                 value={commentInput}
@@ -176,16 +183,37 @@ function PostDetail() {
                 style={{
                   padding: "15px 0",
                   borderBottom: "1px solid #f0f0f0",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "flex-start",
                 }}>
-                <div style={{ marginBottom: "8px" }}>
-                  <strong style={{ marginRight: "10px" }}>
-                    {comment.author}
-                  </strong>
-                  <span style={{ fontSize: "0.85rem", color: "#999" }}>
-                    {comment.date}
-                  </span>
+                <div>
+                  <div style={{ marginBottom: "8px" }}>
+                    <strong style={{ marginRight: "10px" }}>
+                      {comment.author}
+                    </strong>
+                    <span style={{ fontSize: "0.85rem", color: "#999" }}>
+                      {comment.date}
+                    </span>
+                  </div>
+                  <p style={{ margin: 0, color: "#333" }}>{comment.content}</p>
                 </div>
-                <p style={{ margin: 0, color: "#333" }}>{comment.content}</p>
+
+                {user?.nickname === comment.author && (
+                  <button
+                    onClick={() => handleCommentDelete(comment.id)}
+                    style={{
+                      background: "none",
+                      border: "none",
+                      color: "#ff4d4f",
+                      cursor: "pointer",
+                      fontSize: "0.85rem",
+                      padding: "4px 8px",
+                      borderRadius: "4px",
+                    }}>
+                    삭제
+                  </button>
+                )}
               </li>
             ))}
           </ul>

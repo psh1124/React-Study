@@ -16,15 +16,12 @@ function Home() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // state 타입 단언
   const state = location.state as LocationState;
 
   useEffect(() => {
     if (state?.toastMessage) {
-      // NavigationWatcher의 dismiss 로직을 피하기 위해 400ms 지연
       const timer = setTimeout(() => {
         notify.error(state.toastMessage as string);
-        // 메시지 출력 후 state를 초기화하여 중복 알림 방지
         navigate(location.pathname, { replace: true, state: {} });
       }, 400);
 

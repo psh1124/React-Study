@@ -101,19 +101,13 @@ const Card = memo(function Card({
 
         <div className="card__header">
           {category && <span className="card__category">{category}</span>}
-          <h2 className="card__title" style={{ marginBottom: "4px" }}>
-            {title}
-          </h2>
+          <h2 className="card__title">{title}</h2>
         </div>
 
-        <p
-          className="card__content"
-          style={{ marginTop: "0", marginBottom: "16px" }}>
-          {content}
-        </p>
+        <p className="card__content">{content}</p>
 
         {author && (
-          <div className="card__info" style={{ marginTop: "auto" }}>
+          <div className="card__info">
             <span className="card__author">
               by <strong>{author}</strong>
             </span>
@@ -124,14 +118,14 @@ const Card = memo(function Card({
       {hasFooter && (
         <div className="card__footer">
           <div className="card__stats">
-            <div className="stat-group">
+            <div className="card__stat-group">
               <button
-                className={`stat-item like-btn ${isLoggedIn && isLiked ? "active" : ""}`}
+                className={`card__stat-item like-btn ${isLoggedIn && isLiked ? "active" : ""}`}
                 onClick={handleLikeClick}>
                 {isLiked ? "❤️" : "🤍"} {likes}
               </button>
-              <span className="stat-item">💬 {comments || 0}</span>
-              <span className="stat-item">👀 {views || 0}</span>
+              <span className="card__stat-item">💬 {comments || 0}</span>
+              <span className="card__stat-item">👀 {views || 0}</span>
             </div>
             {date && <span className="card__date">{date}</span>}
           </div>
