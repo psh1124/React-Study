@@ -2,7 +2,11 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # 메인 브랜치에 푸시될 때마다 실행
+    branches: ["main"]
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
 
 permissions:
   contents: read
