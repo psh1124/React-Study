@@ -146,6 +146,107 @@ export const MOCK_POSTS: Post[] = [
   },
 ];
 
+export const MOCK_COMMENTS: Comment[] = [
+  {
+    id: 1,
+    postId: 1,
+    author: "컴포넌트깎는노인",
+    content: "드디어 useMemo 지옥에서 탈출인가요? 기대되네요.",
+    date: "2026.02.01",
+  },
+  {
+    id: 2,
+    postId: 1,
+    author: "주니어개발자",
+    content: "컴파일러가 알아서 해준다고 하니 코드가 훨씬 깔끔해질 것 같아요!",
+    date: "2026.02.02",
+  },
+  {
+    id: 3,
+    postId: 1,
+    author: "리액트러버",
+    content: "실제로 써봤는데 진짜 편합니다. 꼭 도입해보세요.",
+    date: "2026.02.02",
+  },
+
+  {
+    id: 4,
+    postId: 2,
+    author: "미래지향",
+    content: "이제 UI가 고정된 게 아니라 상황에 따라 변하겠군요.",
+    date: "2026.01.29",
+  },
+  {
+    id: 5,
+    postId: 2,
+    author: "인간지능",
+    content: "에이전트가 판단 실수를 했을 때의 대응책도 궁금합니다.",
+    date: "2026.01.30",
+  },
+
+  {
+    id: 6,
+    postId: 3,
+    author: "애니금지",
+    content: "Satisfies 연산자는 진짜 혁명입니다. 타입 추론이 너무 완벽해요.",
+    date: "2026.01.26",
+  },
+
+  {
+    id: 7,
+    postId: 4,
+    author: "화이트해커",
+    content: "서버 함수 쓸 때 클라이언트 데이터 검증은 여전히 필수입니다!",
+    date: "2026.01.21",
+  },
+  {
+    id: 8,
+    postId: 4,
+    author: "시큐리티킴",
+    content: "맞습니다. 편의성만큼 보안 위협도 늘어나는 법이죠.",
+    date: "2026.01.22",
+  },
+
+  {
+    id: 9,
+    postId: 7,
+    author: "넥스트고수",
+    content: "PPR 쓰니까 LCP 성능이 비약적으로 좋아지더라고요.",
+    date: "2026.01.13",
+  },
+  {
+    id: 10,
+    postId: 7,
+    author: "풀스택커",
+    content:
+      "부분적으로 서스펜스 걸리는 게 사용자 경험에 정말 큰 도움이 됩니다.",
+    date: "2026.01.14",
+  },
+
+  {
+    id: 11,
+    postId: 8,
+    author: "웹딥러닝",
+    content: "브라우저에서 직접 추론하니까 개인정보 보호 측면에서도 훌륭해요.",
+    date: "2026.01.09",
+  },
+
+  {
+    id: 12,
+    postId: 10,
+    author: "네트워크맨",
+    content: "TCP 핸드셰이크가 없으니 초기 연결 속도가 압도적이네요.",
+    date: "2026.01.03",
+  },
+  {
+    id: 13,
+    postId: 10,
+    author: "인프라요정",
+    content: "하지만 아직 방화벽 이슈가 있는 곳들이 있으니 주의해야 합니다.",
+    date: "2026.01.04",
+  },
+];
+
 export interface Comment {
   id: number;
   postId: number;
@@ -160,4 +261,12 @@ export const getPosts = (): Post[] => {
 
 export const savePosts = (posts: Post[]) => {
   storage.set(STORAGE_KEYS.POSTS, posts);
+};
+
+export const getComments = (): Comment[] => {
+  return storage.get<Comment[]>(STORAGE_KEYS.COMMENTS, MOCK_COMMENTS);
+};
+
+export const saveComments = (comments: Comment[]) => {
+  storage.set(STORAGE_KEYS.COMMENTS, comments);
 };

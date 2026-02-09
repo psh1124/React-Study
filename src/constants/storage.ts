@@ -4,6 +4,7 @@ export const STORAGE_KEYS = {
   POSTS: "posts",
   LIKED_POSTS: "likedPosts",
   POST_LIKE_COUNTS: "postLikeCounts",
+  COMMENTS: "comments",
 } as const;
 
 export const storage = {
