@@ -56,7 +56,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(-5px);
+    transform: translateY(-0.3125rem);
   }
   to {
     opacity: 1;
@@ -108,6 +108,11 @@
   margin-top: 0.5rem;
 }
 
+.auth-form__actions button {
+  width: 100%;
+  padding: 0.8rem;
+}
+
 .auth-footer-link {
   text-align: center;
   font-size: clamp(0.9rem, 2vw, 1rem);
@@ -129,17 +134,22 @@
   color: #2563eb;
 }
 
-.auth-footer-link a::after {
-  content: "";
-  position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: currentColor;
-  transition: width 0.3s ease;
-}
+@media (max-width: 48rem) {
+  .auth-title {
+    margin-top: 1rem;
+  }
 
-.auth-footer-link a:hover::after {
-  width: 100%;
+  .auth-form__actions button {
+    font-size: 1rem;
+  }
+
+  .auth-footer-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .auth-footer-link a {
+    margin-left: 0;
+  }
 }
