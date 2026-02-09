@@ -109,6 +109,15 @@ class PostService {
       };
     });
   }
+
+  deleteAllByAuthor(nickname: string) {
+    const allPosts = this.getAll();
+    const remainingPosts = allPosts.filter((post) => post.author !== nickname);
+
+    this.saveAll(remainingPosts);
+
+    console.log(`${nickname}님의 모든 게시글이 삭제되었습니다.`);
+  }
 }
 
 export const postService = new PostService();

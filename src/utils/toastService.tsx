@@ -3,8 +3,6 @@ import { AUTH_MESSAGES } from "../constants/messages";
 import Button from "../components/Button/Button";
 import "./toastService.css";
 
-// 기존에 활성화된 toast 존재시 흔들림 애니메이션
-
 const shakeExistingToast = (id: string) => {
   if (toast.isActive(id)) {
     toast.update(id, { className: "Toastify__toast" });
@@ -22,7 +20,6 @@ export const notify = {
   warn: (msg: string) => toast.warn(msg),
   info: (msg: string) => toast.info(msg),
 
-  // 성공알림
   loginSuccess: (nickname: string) =>
     toast.success(`👋 반갑습니다, ${nickname}님!`, { icon: false }),
 
@@ -44,11 +41,9 @@ export const notify = {
   withdrawSuccess: () =>
     toast.success(AUTH_MESSAGES.WITHDRAW_SUCCESS, { icon: false }),
 
-  // 사용자확인 알림
   confirmDelete: (onConfirm: () => void) => {
     const TOAST_ID = "confirm-delete";
 
-    // if (shakeExistingToast(TOAST_ID)) return;
     toast.dismiss(TOAST_ID);
 
     toast.warn(
@@ -152,7 +147,6 @@ export const notify = {
     );
   },
 
-  // 안내알림
   logoutSuccess: () =>
     toast.info("로그아웃 되었습니다. 다음에 또 봐요!", { icon: false }),
 
@@ -163,6 +157,5 @@ export const notify = {
       onClick: () => navigate?.("/login"),
     }),
 
-  // 정리
   dismiss: (id?: string) => toast.dismiss(id),
 };
