@@ -4,6 +4,7 @@ import "./Header.css";
 import { useAuth } from "../../context/auth/useAuth";
 import Button from "../Button/Button";
 import { mockLogout } from "../../mocks/auth";
+import logo from "/favicon.png";
 
 function Header() {
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ function Header() {
   return (
     <header className="header">
       <NavLink to="/" end className="brand-group">
-        <img src="/favicon.png" alt="React Logo" className="header-logo" />
+        <img src={logo} alt="React Logo" className="header-logo" />
         <span className="logo">React Study</span>
       </NavLink>
 
